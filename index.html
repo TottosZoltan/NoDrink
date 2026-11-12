@@ -51,10 +51,12 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 td,th{text-align:left;padding:5px 4px;border-top:1px solid var(--line);font-weight:normal}
 th{color:var(--mute);border-top:0;font-size:12px}
 .mute{color:var(--mute);font-size:14px}
-.hidden{display:none}
+.hidden{display:none!important}
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:20px;z-index:5}
 .ov .card{max-width:380px;width:100%;margin:0}
 .ov .row button{flex:1}
+.ov .card{position:relative}
+.xb{position:absolute;top:8px;right:8px;width:34px!important;height:34px;padding:0!important;line-height:1;font-size:20px;border-radius:50%}
 </style>
 </head>
 <body>
@@ -114,13 +116,13 @@ th{color:var(--mute);border-top:0;font-size:12px}
 
 <div class="ov hidden" id="ask">
   <div class="card">
+    <button class="xb" id="askX" aria-label="Bezárás">×</button>
     <h2>Ugye nem ittál ma?</h2>
     <p class="mute" id="askd"></p>
     <div class="row">
       <button class="main" id="askNo">Nem ittam</button>
       <button id="askYes">Ittam</button>
     </div>
-    <div class="row"><button id="askLater">Később</button></div>
   </div>
 </div>
 
@@ -301,13 +303,14 @@ $("period").onchange=renderStats;
 /* Napi kérdés */
 function askToday(){
   const t=todayS();
-  if(data.days[t])return;
+  if(data.days[t]||data.asked===t)return;
+  data.asked=t;persist();
   $("askd").textContent=t+" ("+WDL[new Date().getDay()]+")";
   $("ask").classList.remove("hidden");
 }
 $("askNo").onclick=()=>{data.days[todayS()]={s:"n"};persist();$("ask").classList.add("hidden");renderAll()};
 $("askYes").onclick=()=>{$("ask").classList.add("hidden");view={y:new Date().getFullYear(),m:new Date().getMonth()};openPanel(todayS());mode="i";syncSeg();$("panel").scrollIntoView({behavior:"smooth"})};
-$("askLater").onclick=()=>$("ask").classList.add("hidden");
+$("askX").onclick=()=>$("ask").classList.add("hidden");
 
 /* Mentés / betöltés */
 $("export").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));a.download="napok-"+todayS()+".json";a.click()};
@@ -322,7 +325,7 @@ $("file").onchange=e=>{
 function renderAll(){renderTop();renderCal();renderStats();if(sel&&!$("panel").classList.contains("hidden")){const e=data.days[sel]||{};}}
 renderAll();
 askToday();
-document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderAll();askToday()}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)renderAll()});
 </script>
 </body>
 </html>
