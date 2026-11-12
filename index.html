@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Napok</title>
+<style>
+:root{--bg:#f3f5f1;--card:#fff;--ink:#1d2a24;--mute:#6a7a72;--ok:#2f6f57;--okbg:#d8ebe1;--bad:#b5532f;--badbg:#f4d9cd;--line:#dde3dc}
+@media (prefers-color-scheme:dark){:root{--bg:#141a17;--card:#1d2621;--ink:#e6ede8;--mute:#8fa097;--ok:#5fbf97;--okbg:#244536;--bad:#e0875f;--badbg:#4a2c20;--line:#2c3832}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif;padding:18px;max-width:600px;margin-inline:auto}
+h1{font-size:15px;font-weight:normal;color:var(--mute);margin:6px 0 0}
+h2{font-size:17px;margin:0 0 10px}
+.big{font-size:92px;line-height:1;margin:2px 0;color:var(--ok);font-variant-numeric:tabular-nums}
+.big.zero{color:var(--bad)}
+.sub{color:var(--mute);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.grid div{background:var(--bg);border-radius:8px;padding:8px 10px}
+.grid b{display:block;font-size:20px}
+.grid span{font-size:12px;color:var(--mute)}
+button,input,select,textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+button{cursor:pointer;width:auto}
+button.main{background:var(--ok);color:#fff;border:0}
+button.danger{color:var(--bad)}
+:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+label{display:block;font-size:14px;color:var(--mute);margin:10px 0 3px}
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.nav b{font-size:17px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal .h{font-size:12px;color:var(--mute)}
+.cal button{aspect-ratio:1;padding:0;width:100%;border-radius:8px;border:1px solid var(--line);background:var(--card);font-size:15px}
+.cal button.ok{background:var(--okbg);border-color:var(--ok)}
+.cal button.bad{background:var(--badbg);border-color:var(--bad)}
+.cal button.todo{border-style:dashed;border-color:var(--mute)}
+.cal button.today{font-weight:bold;box-shadow:0 0 0 2px var(--ink) inset}
+.cal button.sel{outline:2px solid var(--ink)}
+.cal button:disabled{opacity:.35;cursor:default}
+.cal i{visibility:hidden}
+.leg{font-size:12px;color:var(--mute);margin-top:8px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1}
+.seg button.on.n{background:var(--okbg);border-color:var(--ok)}
+.seg button.on.i{background:var(--badbg);border-color:var(--bad)}
+.row{display:flex;gap:8px;margin-top:12px}
+.bar{display:flex;align-items:center;gap:8px;font-size:14px;margin:3px 0}
+.bar span:first-child{width:70px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar div{height:12px;background:var(--bad);border-radius:3px;min-width:2px}
+.bar em{font-style:normal;color:var(--mute);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{text-align:left;padding:5px 4px;border-top:1px solid var(--line);font-weight:normal}
+th{color:var(--mute);border-top:0;font-size:12px}
+.mute{color:var(--mute);font-size:14px}
+.hidden{display:none}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:20px;z-index:5}
+.ov .card{max-width:380px;width:100%;margin:0}
+.ov .row button{flex:1}
+</style>
+</head>
+<body>
+<h1>Napok ivás nélkül</h1>
+<div id="big" class="big">0</div>
+<p class="sub" id="sub"></p>
+
+<div class="card" id="warn"></div>
+
+<div class="card">
+  <div class="nav">
+    <button id="prev" aria-label="Előző hónap">‹</button>
+    <b id="mname"></b>
+    <button id="next" aria-label="Következő hónap">›</button>
+  </div>
+  <div class="cal" id="cal"></div>
+  <p class="leg">Zöld: nem ittál · Piros: ittál · Szaggatott: még nincs kitöltve. Szerkeszteni az aktuális hónap első napjától lehet.</p>
+  <div id="panel" class="hidden">
+    <h2 id="ptitle"></h2>
+    <div class="seg">
+      <button id="bn">Nem ittam</button>
+      <button id="bi">Ittam</button>
+    </div>
+    <div id="dfields" class="hidden">
+      <label for="what">Mit ittál?</label>
+      <input id="what" placeholder="pl. sör, bor, rövid" autocomplete="off">
+      <label for="amount">Mennyit?</label>
+      <input id="amount" placeholder="pl. 3 doboz, 2 pohár" autocomplete="off">
+      <label for="why">Miért?</label>
+      <input id="why" placeholder="pl. stressz, társaság, unalom" autocomplete="off">
+    </div>
+    <label for="note">Megjegyzés</label>
+    <textarea id="note" rows="2"></textarea>
+    <div class="row">
+      <button class="main" id="save">Mentés</button>
+      <button class="danger" id="clear">Nap törlése</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Statisztika</h2>
+  <select id="period" aria-label="Időszak">
+    <option value="30">Utolsó 30 nap</option>
+    <option value="month">Ez a hónap</option>
+    <option value="all">Teljes időszak</option>
+  </select>
+  <div id="stats"></div>
+</div>
+
+<div class="row">
+  <button id="export">Mentés fájlba</button>
+  <button id="import">Betöltés fájlból</button>
+</div>
+<input type="file" id="file" accept="application/json" class="hidden">
+<p class="mute">Az adatok csak ebben a böngészőben tárolódnak. Rendszeresen ments fájlba.</p>
+
+<div class="ov hidden" id="ask">
+  <div class="card">
+    <h2>Ugye nem ittál ma?</h2>
+    <p class="mute" id="askd"></p>
+    <div class="row">
+      <button class="main" id="askNo">Nem ittam</button>
+      <button id="askYes">Ittam</button>
+    </div>
+    <div class="row"><button id="askLater">Később</button></div>
+  </div>
+</div>
+
+<script>
+const KEY="napok-v2";
+const MN=["január","február","március","április","május","június","július","augusztus","szeptember","október","november","december"];
+const WD=["Hé","Ke","Sze","Cs","Pé","Szo","Va"];
+const WDL=["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"];
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>new Date(s+"T12:00:00");
+const todayS=()=>iso(new Date());
+const addD=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d)};
+const diff=(a,b)=>Math.round((parse(a)-parse(b))/864e5);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const monthStart=()=>todayS().slice(0,8)+"01";
+
+let data={start:todayS(),days:{}};
+try{
+  const s=localStorage.getItem(KEY);
+  if(s)data=JSON.parse(s);
+  else{ // régi verzióból átvétel
+    const o=JSON.parse(localStorage.getItem("napok-v1")||"null");
+    if(o){
+      for(const k in o.sober||{})data.days[k]={s:"n"};
+      for(const k in o.drinks||{})data.days[k]=Object.assign({s:"i"},o.drinks[k]);
+      const ks=Object.keys(data.days).sort();if(ks.length)data.start=ks[0];
+    }
+  }
+}catch(e){}
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}};
+persist();
+
+const firstDay=()=>{const ks=Object.keys(data.days).sort();return ks.length&&ks[0]<data.start?ks[0]:data.start};
+const lastDrink=()=>{const ks=Object.keys(data.days).filter(k=>data.days[k].s==="i").sort();return ks.length?ks[ks.length-1]:null};
+function streak(){
+  const ld=lastDrink(),t=todayS();
+  return ld?diff(t,ld):diff(t,data.start)+1;
+}
+function streaks(){ // összes összefüggő ivásmentes szakasz
+  const out=[];let cur=0;
+  for(let d=firstDay();d<=todayS();d=addD(d,1)){
+    if(data.days[d]&&data.days[d].s==="i"){if(cur)out.push(cur);cur=0}else cur++;
+  }
+  if(cur)out.push(cur);
+  return out;
+}
+
+/* Naptár */
+let view={y:new Date().getFullYear(),m:new Date().getMonth()};
+let sel=null,mode=null;
+const editable=d=>d>=monthStart()&&d<=todayS();
+
+function renderCal(){
+  $("mname").textContent=view.y+". "+MN[view.m];
+  const first=new Date(view.y,view.m,1),n=new Date(view.y,view.m+1,0).getDate();
+  const off=(first.getDay()+6)%7,t=todayS();
+  let h=WD.map(w=>`<div class="h">${w}</div>`).join("")+"<i></i>".repeat(off).replace(/<i><\/i>/g,'<div></div>');
+  for(let i=1;i<=n;i++){
+    const d=view.y+"-"+pad(view.m+1)+"-"+pad(i),e=data.days[d];
+    let c="";
+    if(e)c=e.s==="i"?"bad":"ok";
+    else if(d<=t&&d>=data.start)c="todo";
+    if(d===t)c+=" today";
+    if(d===sel)c+=" sel";
+    h+=`<button class="${c}" data-d="${d}" ${d>t?"disabled":""}>${i}</button>`;
+  }
+  $("cal").innerHTML=h;
+  const ny=new Date(),atNow=view.y===ny.getFullYear()&&view.m===ny.getMonth();
+  $("next").disabled=atNow;
+}
+function openPanel(d){
+  sel=d;const e=data.days[d]||{};
+  mode=e.s||null;
+  $("panel").classList.remove("hidden");
+  const dt=parse(d);
+  $("ptitle").textContent=d+" ("+WDL[dt.getDay()]+")";
+  const ed=editable(d);
+  ["what","amount","why","note"].forEach(k=>{$(k).value=e[k]||"";$(k).disabled=!ed});
+  ["bn","bi","save","clear"].forEach(k=>$(k).disabled=!ed);
+  if(!ed)$("ptitle").textContent+=" – csak megtekintés";
+  syncSeg();renderCal();
+}
+function syncSeg(){
+  $("bn").className=mode==="n"?"on n":"";
+  $("bi").className=mode==="i"?"on i":"";
+  $("dfields").classList.toggle("hidden",mode!=="i");
+}
+$("cal").onclick=e=>{const d=e.target.dataset&&e.target.dataset.d;if(d)openPanel(d)};
+$("prev").onclick=()=>{view.m--;if(view.m<0){view.m=11;view.y--}renderCal()};
+$("next").onclick=()=>{view.m++;if(view.m>11){view.m=0;view.y++}renderCal()};
+$("bn").onclick=()=>{mode="n";syncSeg()};
+$("bi").onclick=()=>{mode="i";syncSeg()};
+$("save").onclick=()=>{
+  if(!mode){alert("Válaszd ki: Nem ittam vagy Ittam.");return}
+  const e={s:mode};
+  if(mode==="i"){
+    if(!$("what").value.trim()||!$("amount").value.trim()){alert("Add meg, mit és mennyit ittál.");return}
+    e.what=$("what").value.trim();e.amount=$("amount").value.trim();e.why=$("why").value.trim();
+  }
+  if($("note").value.trim())e.note=$("note").value.trim();
+  data.days[sel]=e;
+  if(sel<data.start)data.start=sel;
+  persist();renderAll();
+};
+$("clear").onclick=()=>{if(!data.days[sel]||confirm(sel+" adatainak törlése?")){delete data.days[sel];persist();openPanel(sel);renderAll()}};
+
+/* Főszámláló + figyelmeztetés */
+function renderTop(){
+  const s=streak(),ld=lastDrink(),t=todayS(),te=data.days[t];
+  $("big").textContent=s;
+  $("big").classList.toggle("zero",s===0);
+  $("sub").textContent=s===0?"Ma ittál. Holnap új nap, új széria.":("ivásmentes nap egymás után"+(ld?" (utolsó ivás: "+ld+")":""));
+  let miss=0;
+  for(let d=monthStart()>data.start?monthStart():data.start;d<t;d=addD(d,1))if(!data.days[d])miss++;
+  const w=$("warn");
+  if(!te||miss){
+    w.classList.remove("hidden");
+    w.innerHTML=(!te?"A mai nap még nincs kitöltve. ":"")+(miss?`Az idei hónapban ${miss} korábbi nap nincs kitöltve (szaggatott keret a naptárban).`:"");
+  }else w.classList.add("hidden");
+}
+
+/* Statisztika */
+function renderStats(){
+  const p=$("period").value,t=todayS();
+  let from=firstDay();
+  if(p==="30"){const f=addD(t,-29);if(f>from)from=f}
+  if(p==="month"&&monthStart()>from)from=monthStart();
+  let total=0,drank=0,conf=0,unconf=0;
+  const wd=[0,0,0,0,0,0,0],what={},why={};
+  let maxDrinkRun=0;
+  for(let d=from;d<=t;d=addD(d,1)){
+    total++;const e=data.days[d];
+    if(e&&e.s==="i"){
+      drank++;wd[(parse(d).getDay()+6)%7]++;
+      const a=(e.what||"").toLowerCase(),b=(e.why||"").toLowerCase();
+      if(a)what[a]=(what[a]||0)+1;
+      if(b)why[b]=(why[b]||0)+1;
+    }else if(e)conf++;else unconf++;
+  }
+  const sobr=total-drank,pct=total?Math.round(sobr/total*100):0;
+  const ss=streaks(),avg=ss.length?(ss.reduce((a,b)=>a+b,0)/ss.length).toFixed(1):"0";
+  const bars=(o,max)=>{
+    const arr=Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    if(!arr.length)return '<p class="mute">Nincs adat.</p>';
+    const m=Math.max(...arr.map(x=>x[1]));
+    return arr.map(([k,v])=>`<div class="bar"><span title="${esc(k)}">${esc(k)}</span><div style="width:${v/m*55}%"></div><em>${v}</em></div>`).join("");
+  };
+  const wm=Math.max(...wd,1);
+  const wdBars=WD.map((n,i)=>`<div class="bar"><span>${n}</span><div style="width:${wd[i]/wm*55}%"></div><em>${wd[i]}</em></div>`).join("");
+  // havi bontás (mindig a teljes adatból)
+  const months={};
+  for(let d=firstDay();d<=t;d=addD(d,1)){
+    const k=d.slice(0,7);months[k]=months[k]||{n:0,i:0};
+    months[k].n++;if(data.days[d]&&data.days[d].s==="i")months[k].i++;
+  }
+  const mrows=Object.keys(months).sort().reverse().map(k=>{const m=months[k];return `<tr><td>${k}</td><td>${m.i}</td><td>${m.n-m.i}</td><td>${Math.round((m.n-m.i)/m.n*100)}%</td></tr>`}).join("");
+  $("stats").innerHTML=`
+  <div class="grid" style="margin-top:12px">
+    <div><b>${s0()}</b><span>jelenlegi széria</span></div>
+    <div><b>${Math.max(0,...ss)}</b><span>leghosszabb széria</span></div>
+    <div><b>${avg}</b><span>átlagos széria</span></div>
+    <div><b>${sobr}</b><span>ivásmentes nap</span></div>
+    <div><b>${drank}</b><span>ivós nap</span></div>
+    <div><b>${pct}%</b><span>ivásmentes arány</span></div>
+  </div>
+  <p class="mute">${total} nap az időszakban: ${conf} megerősítve ivásmentesnek, ${unconf} nincs kitöltve (ezek a számolásban ivásmentesnek számítanak).</p>
+  <h2>Ivós napok a hét napjain</h2>${wdBars}
+  <h2 style="margin-top:14px">Leggyakoribb italok</h2>${bars(what)}
+  <h2 style="margin-top:14px">Leggyakoribb okok</h2>${bars(why)}
+  <h2 style="margin-top:14px">Hónapok</h2>
+  <table><tr><th>Hónap</th><th>Ivós</th><th>Ivásmentes</th><th>Arány</th></tr>${mrows}</table>`;
+}
+const s0=()=>streak();
+$("period").onchange=renderStats;
+
+/* Napi kérdés */
+function askToday(){
+  const t=todayS();
+  if(data.days[t])return;
+  $("askd").textContent=t+" ("+WDL[new Date().getDay()]+")";
+  $("ask").classList.remove("hidden");
+}
+$("askNo").onclick=()=>{data.days[todayS()]={s:"n"};persist();$("ask").classList.add("hidden");renderAll()};
+$("askYes").onclick=()=>{$("ask").classList.add("hidden");view={y:new Date().getFullYear(),m:new Date().getMonth()};openPanel(todayS());mode="i";syncSeg();$("panel").scrollIntoView({behavior:"smooth"})};
+$("askLater").onclick=()=>$("ask").classList.add("hidden");
+
+/* Mentés / betöltés */
+$("export").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));a.download="napok-"+todayS()+".json";a.click()};
+$("import").onclick=()=>$("file").click();
+$("file").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const j=JSON.parse(r.result);if(j.days&&j.start){data=j;persist();renderAll()}else alert("Hibás fájl.")}catch(x){alert("Hibás fájl.")}};
+  r.readAsText(f);
+};
+
+function renderAll(){renderTop();renderCal();renderStats();if(sel&&!$("panel").classList.contains("hidden")){const e=data.days[sel]||{};}}
+renderAll();
+askToday();
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderAll();askToday()}});
+</script>
+</body>
+</html>
