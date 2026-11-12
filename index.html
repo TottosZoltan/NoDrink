@@ -2,18 +2,18 @@
 <html lang="hu">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Napok</title>
 <style>
-:root{--bg:#f3f5f1;--card:#fff;--ink:#1d2a24;--mute:#6a7a72;--ok:#2f6f57;--okbg:#d8ebe1;--bad:#b5532f;--badbg:#f4d9cd;--line:#dde3dc}
-@media (prefers-color-scheme:dark){:root{--bg:#141a17;--card:#1d2621;--ink:#e6ede8;--mute:#8fa097;--ok:#5fbf97;--okbg:#244536;--bad:#e0875f;--badbg:#4a2c20;--line:#2c3832}}
+:root{--bg:#f3f5f1;--card:#fff;--ink:#1d2a24;--mute:#6a7a72;--ok:#2f6f57;--okbg:#d8ebe1;--bad:#b5532f;--badbg:#f4d9cd;--line:#dde3dc;--glass:rgba(255,255,255,.4);--glassb:rgba(255,255,255,.65);--ind:rgba(255,255,255,.7)}
+@media (prefers-color-scheme:dark){:root{--bg:#141a17;--card:#1d2621;--ink:#e6ede8;--mute:#8fa097;--ok:#5fbf97;--okbg:#244536;--bad:#e0875f;--badbg:#4a2c20;--line:#2c3832;--glass:rgba(40,58,50,.45);--glassb:rgba(255,255,255,.14);--ind:rgba(255,255,255,.16)}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif;padding:18px;max-width:600px;margin-inline:auto}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif;padding:18px 18px calc(110px + env(safe-area-inset-bottom,0px));max-width:600px;margin-inline:auto}
 h1{font-size:15px;font-weight:normal;color:var(--mute);margin:6px 0 0}
 h2{font-size:17px;margin:0 0 10px}
 .big{font-size:92px;line-height:1;margin:2px 0;color:var(--ok);font-variant-numeric:tabular-nums}
 .big.zero{color:var(--bad)}
-.sub{color:var(--mute);margin:0 0 16px}
+.sub{color:var(--mute);margin:0 0 12px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .grid div{background:var(--bg);border-radius:8px;padding:8px 10px}
@@ -25,6 +25,8 @@ button.main{background:var(--ok);color:#fff;border:0}
 button.danger{color:var(--bad)}
 :focus-visible{outline:2px solid var(--ok);outline-offset:2px}
 label{display:block;font-size:14px;color:var(--mute);margin:10px 0 3px}
+.two{display:flex;gap:8px}
+.two>*{flex:1;min-width:0}
 .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .nav b{font-size:17px}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
@@ -36,7 +38,6 @@ label{display:block;font-size:14px;color:var(--mute);margin:10px 0 3px}
 .cal button.today{font-weight:bold;box-shadow:0 0 0 2px var(--ink) inset}
 .cal button.sel{outline:2px solid var(--ink)}
 .cal button:disabled{opacity:.35;cursor:default}
-.cal i{visibility:hidden}
 .leg{font-size:12px;color:var(--mute);margin-top:8px}
 .seg{display:flex;gap:8px}
 .seg button{flex:1}
@@ -44,85 +45,116 @@ label{display:block;font-size:14px;color:var(--mute);margin:10px 0 3px}
 .seg button.on.i{background:var(--badbg);border-color:var(--bad)}
 .row{display:flex;gap:8px;margin-top:12px}
 .bar{display:flex;align-items:center;gap:8px;font-size:14px;margin:3px 0}
-.bar span:first-child{width:70px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar span:first-child{width:80px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bar div{height:12px;background:var(--bad);border-radius:3px;min-width:2px}
 .bar em{font-style:normal;color:var(--mute);font-size:13px}
+.prog{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:4px 0 14px}
+.prog div{height:100%;background:var(--ok);transition:width .4s}
 table{width:100%;border-collapse:collapse;font-size:14px}
 td,th{text-align:left;padding:5px 4px;border-top:1px solid var(--line);font-weight:normal}
 th{color:var(--mute);border-top:0;font-size:12px}
 .mute{color:var(--mute);font-size:14px}
 .hidden{display:none!important}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:20px;z-index:5}
-.ov .card{max-width:380px;width:100%;margin:0}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:20px;z-index:8}
+.ov .card{max-width:380px;width:100%;margin:0;position:relative}
 .ov .row button{flex:1}
-.ov .card{position:relative}
 .xb{position:absolute;top:8px;right:8px;width:34px!important;height:34px;padding:0!important;line-height:1;font-size:20px;border-radius:50%}
+/* liquid glass dock */
+.dock{position:fixed;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none;z-index:6}
+.dock-in{pointer-events:auto;position:relative;display:flex;width:min(360px,calc(100% - 32px));padding:5px;border-radius:999px;background:var(--glass);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:1px solid var(--glassb);box-shadow:0 8px 30px rgba(0,0,0,.2),inset 0 1px 0 var(--glassb)}
+.ind{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/3);border-radius:999px;background:var(--ind);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 8px rgba(0,0,0,.15);transition:transform .4s cubic-bezier(.3,1.35,.5,1)}
+.dock button{flex:1;position:relative;z-index:1;background:none;border:0;padding:11px 0;border-radius:999px;font-size:14px;color:var(--mute);transition:color .2s}
+.dock button.on{color:var(--ink);font-weight:bold}
+@media (prefers-reduced-motion:reduce){.ind,.prog div{transition:none}}
 </style>
 </head>
 <body>
-<h1>Napok ivás nélkül</h1>
-<div id="big" class="big">0</div>
-<p class="sub" id="sub"></p>
+<h1 id="h1">Napok ivás nélkül</h1>
 
-<div class="card" id="warn"></div>
-
-<div class="card">
-  <div class="nav">
-    <button id="prev" aria-label="Előző hónap">‹</button>
-    <b id="mname"></b>
-    <button id="next" aria-label="Következő hónap">›</button>
+<!-- NAPLÓ -->
+<section id="p-home">
+  <div class="big" id="big">0</div>
+  <p class="sub" id="sub"></p>
+  <div id="goal"></div>
+  <div class="card" id="warn"></div>
+  <div class="card">
+    <div class="nav">
+      <button id="prev" aria-label="Előző hónap">‹</button>
+      <b id="mname"></b>
+      <button id="next" aria-label="Következő hónap">›</button>
+    </div>
+    <div class="cal" id="cal"></div>
+    <p class="leg">Zöld: nem ittál · Piros: ittál · Szaggatott: még nincs kitöltve. Szerkeszteni az aktuális hónap első napjától lehet.</p>
+    <div id="panel" class="hidden">
+      <h2 id="ptitle"></h2>
+      <div class="seg"><button id="bn">Nem ittam</button><button id="bi">Ittam</button></div>
+      <div id="dfields" class="hidden">
+        <label for="what">Mit ittál?</label>
+        <input id="what" list="whatl" placeholder="pl. sör, bor, rövid" autocomplete="off">
+        <datalist id="whatl"><option value="Sör"><option value="Bor"><option value="Pálinka"><option value="Vodka"><option value="Whisky"><option value="Fröccs"><option value="Rövidital / koktél"></datalist>
+        <div class="two">
+          <div><label for="unit">Mértékegység</label>
+            <select id="unit"><option value="">Válassz…</option><option value="shot">Shot (4 cl)</option><option value="pohar">Pohár (500 ml)</option></select></div>
+          <div><label for="qty">Mennyi?</label><select id="qty"></select></div>
+        </div>
+        <label for="why">Miért?</label>
+        <select id="why"></select>
+        <input id="whyo" class="hidden" placeholder="Saját ok beírása" style="margin-top:8px" autocomplete="off">
+      </div>
+      <label for="note">Megjegyzés</label>
+      <textarea id="note" rows="2"></textarea>
+      <div class="row"><button class="main" id="save">Mentés</button><button class="danger" id="clear">Nap törlése</button></div>
+    </div>
   </div>
-  <div class="cal" id="cal"></div>
-  <p class="leg">Zöld: nem ittál · Piros: ittál · Szaggatott: még nincs kitöltve. Szerkeszteni az aktuális hónap első napjától lehet.</p>
-  <div id="panel" class="hidden">
-    <h2 id="ptitle"></h2>
-    <div class="seg">
-      <button id="bn">Nem ittam</button>
-      <button id="bi">Ittam</button>
-    </div>
-    <div id="dfields" class="hidden">
-      <label for="what">Mit ittál?</label>
-      <input id="what" placeholder="pl. sör, bor, rövid" autocomplete="off">
-      <label for="amount">Mennyit?</label>
-      <input id="amount" placeholder="pl. 3 doboz, 2 pohár" autocomplete="off">
-      <label for="why">Miért?</label>
-      <input id="why" placeholder="pl. stressz, társaság, unalom" autocomplete="off">
-    </div>
-    <label for="note">Megjegyzés</label>
-    <textarea id="note" rows="2"></textarea>
-    <div class="row">
-      <button class="main" id="save">Mentés</button>
-      <button class="danger" id="clear">Nap törlése</button>
-    </div>
+</section>
+
+<!-- STATISZTIKA -->
+<section id="p-stats" class="hidden">
+  <div class="card">
+    <h2>Statisztika</h2>
+    <select id="period" aria-label="Időszak">
+      <option value="30">Utolsó 30 nap</option>
+      <option value="month">Ez a hónap</option>
+      <option value="all">Teljes időszak</option>
+    </select>
+    <div id="stats"></div>
   </div>
-</div>
+</section>
 
-<div class="card">
-  <h2>Statisztika</h2>
-  <select id="period" aria-label="Időszak">
-    <option value="30">Utolsó 30 nap</option>
-    <option value="month">Ez a hónap</option>
-    <option value="all">Teljes időszak</option>
-  </select>
-  <div id="stats"></div>
-</div>
+<!-- PROFIL -->
+<section id="p-prof" class="hidden">
+  <div class="card">
+    <h2>Profil</h2>
+    <label for="name">Neved</label>
+    <input id="name" placeholder="Opcionális" autocomplete="off">
+    <label for="goalSel">Célom (ivásmentes napok egymás után)</label>
+    <select id="goalSel"><option value="0">Nincs cél</option><option value="7">7 nap</option><option value="14">14 nap</option><option value="30">30 nap</option><option value="60">60 nap</option><option value="90">90 nap</option><option value="180">180 nap</option><option value="365">365 nap</option></select>
+    <p class="mute" id="psum" style="margin-top:12px"></p>
+  </div>
+  <div class="card">
+    <h2>Adatok</h2>
+    <p class="mute">Minden adat csak ebben a böngészőben tárolódik, nincs felhős mentés. Ments rendszeresen fájlba, hogy át tudd vinni másik eszközre.</p>
+    <div class="row"><button id="export">Mentés fájlba</button><button id="import">Betöltés fájlból</button></div>
+    <div class="row"><button class="danger" id="wipe">Minden adat törlése</button></div>
+    <input type="file" id="file" accept="application/json" class="hidden">
+  </div>
+</section>
 
-<div class="row">
-  <button id="export">Mentés fájlba</button>
-  <button id="import">Betöltés fájlból</button>
-</div>
-<input type="file" id="file" accept="application/json" class="hidden">
-<p class="mute">Az adatok csak ebben a böngészőben tárolódnak. Rendszeresen ments fájlba.</p>
+<nav class="dock" aria-label="Fő navigáció">
+  <div class="dock-in">
+    <span class="ind" id="ind"></span>
+    <button data-t="home" class="on">Napló</button>
+    <button data-t="stats">Statisztika</button>
+    <button data-t="prof">Profil</button>
+  </div>
+</nav>
 
 <div class="ov hidden" id="ask">
   <div class="card">
     <button class="xb" id="askX" aria-label="Bezárás">×</button>
     <h2>Ugye nem ittál ma?</h2>
     <p class="mute" id="askd"></p>
-    <div class="row">
-      <button class="main" id="askNo">Nem ittam</button>
-      <button id="askYes">Ittam</button>
-    </div>
+    <div class="row"><button class="main" id="askNo">Nem ittam</button><button id="askYes">Ittam</button></div>
   </div>
 </div>
 
@@ -131,6 +163,8 @@ const KEY="napok-v2";
 const MN=["január","február","március","április","május","június","július","augusztus","szeptember","október","november","december"];
 const WD=["Hé","Ke","Sze","Cs","Pé","Szo","Va"];
 const WDL=["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"];
+const REASONS=["Stressz","Társaság / buli","Unalom","Ünneplés","Magány","Rossz kedv","Fáradtság","Munka utáni lazítás","Veszekedés / konfliktus","Szokás"];
+const ML={shot:40,pohar:500};
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,"0");
 const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
@@ -140,12 +174,14 @@ const addD=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d)};
 const diff=(a,b)=>Math.round((parse(a)-parse(b))/864e5);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const monthStart=()=>todayS().slice(0,8)+"01";
+const fl=v=>(Math.round(v*10)/10).toString().replace(".",",");
+const mlOf=e=>e&&e.unit&&e.qty?e.qty*ML[e.unit]:0;
 
-let data={start:todayS(),days:{}};
+let data={start:todayS(),days:{},profile:{name:"",goal:0}};
 try{
   const s=localStorage.getItem(KEY);
   if(s)data=JSON.parse(s);
-  else{ // régi verzióból átvétel
+  else{
     const o=JSON.parse(localStorage.getItem("napok-v1")||"null");
     if(o){
       for(const k in o.sober||{})data.days[k]={s:"n"};
@@ -154,16 +190,14 @@ try{
     }
   }
 }catch(e){}
+data.profile=Object.assign({name:"",goal:0},data.profile||{});
 const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}};
 persist();
 
 const firstDay=()=>{const ks=Object.keys(data.days).sort();return ks.length&&ks[0]<data.start?ks[0]:data.start};
 const lastDrink=()=>{const ks=Object.keys(data.days).filter(k=>data.days[k].s==="i").sort();return ks.length?ks[ks.length-1]:null};
-function streak(){
-  const ld=lastDrink(),t=todayS();
-  return ld?diff(t,ld):diff(t,data.start)+1;
-}
-function streaks(){ // összes összefüggő ivásmentes szakasz
+function streak(){const ld=lastDrink(),t=todayS();return ld?diff(t,ld):diff(t,data.start)+1}
+function streaks(){
   const out=[];let cur=0;
   for(let d=firstDay();d<=todayS();d=addD(d,1)){
     if(data.days[d]&&data.days[d].s==="i"){if(cur)out.push(cur);cur=0}else cur++;
@@ -171,6 +205,18 @@ function streaks(){ // összes összefüggő ivásmentes szakasz
   if(cur)out.push(cur);
   return out;
 }
+
+/* Űrlap mezők */
+$("qty").innerHTML='<option value="">Válassz…</option>'+(()=>{let h="";for(let v=0.5;v<=10;v+=0.5)h+=`<option value="${v}">${fl(v)}</option>`;for(let v=11;v<=20;v++)h+=`<option value="${v}">${v}</option>`;return h})();
+$("why").innerHTML='<option value="">Válassz okot…</option>'+REASONS.map(r=>`<option>${r}</option>`).join("")+'<option value="__o">Egyéb – saját beírása</option>';
+$("why").onchange=()=>$("whyo").classList.toggle("hidden",$("why").value!=="__o");
+function setWhy(v){
+  if(!v){$("why").value="";$("whyo").value=""}
+  else if(REASONS.includes(v)){$("why").value=v;$("whyo").value=""}
+  else{$("why").value="__o";$("whyo").value=v}
+  $("whyo").classList.toggle("hidden",$("why").value!=="__o");
+}
+const getWhy=()=>$("why").value==="__o"?$("whyo").value.trim():$("why").value;
 
 /* Naptár */
 let view={y:new Date().getFullYear(),m:new Date().getMonth()};
@@ -181,7 +227,7 @@ function renderCal(){
   $("mname").textContent=view.y+". "+MN[view.m];
   const first=new Date(view.y,view.m,1),n=new Date(view.y,view.m+1,0).getDate();
   const off=(first.getDay()+6)%7,t=todayS();
-  let h=WD.map(w=>`<div class="h">${w}</div>`).join("")+"<i></i>".repeat(off).replace(/<i><\/i>/g,'<div></div>');
+  let h=WD.map(w=>`<div class="h">${w}</div>`).join("")+"<div></div>".repeat(off);
   for(let i=1;i<=n;i++){
     const d=view.y+"-"+pad(view.m+1)+"-"+pad(i),e=data.days[d];
     let c="";
@@ -192,19 +238,23 @@ function renderCal(){
     h+=`<button class="${c}" data-d="${d}" ${d>t?"disabled":""}>${i}</button>`;
   }
   $("cal").innerHTML=h;
-  const ny=new Date(),atNow=view.y===ny.getFullYear()&&view.m===ny.getMonth();
-  $("next").disabled=atNow;
+  const ny=new Date();
+  $("next").disabled=view.y===ny.getFullYear()&&view.m===ny.getMonth();
 }
 function openPanel(d){
   sel=d;const e=data.days[d]||{};
   mode=e.s||null;
   $("panel").classList.remove("hidden");
-  const dt=parse(d);
-  $("ptitle").textContent=d+" ("+WDL[dt.getDay()]+")";
+  $("ptitle").textContent=d+" ("+WDL[parse(d).getDay()]+")";
   const ed=editable(d);
-  ["what","amount","why","note"].forEach(k=>{$(k).value=e[k]||"";$(k).disabled=!ed});
-  ["bn","bi","save","clear"].forEach(k=>$(k).disabled=!ed);
+  $("what").value=e.what||"";
+  $("unit").value=e.unit||"";
+  $("qty").value=e.qty?String(e.qty):"";
+  $("note").value=e.note||"";
+  setWhy(e.why||"");
+  ["what","unit","qty","why","whyo","note","bn","bi","save","clear"].forEach(k=>$(k).disabled=!ed);
   if(!ed)$("ptitle").textContent+=" – csak megtekintés";
+  if(e.s==="i"&&!e.unit&&e.amount)$("ptitle").textContent+=" · korábbi mennyiség: "+e.amount;
   syncSeg();renderCal();
 }
 function syncSeg(){
@@ -221,8 +271,9 @@ $("save").onclick=()=>{
   if(!mode){alert("Válaszd ki: Nem ittam vagy Ittam.");return}
   const e={s:mode};
   if(mode==="i"){
-    if(!$("what").value.trim()||!$("amount").value.trim()){alert("Add meg, mit és mennyit ittál.");return}
-    e.what=$("what").value.trim();e.amount=$("amount").value.trim();e.why=$("why").value.trim();
+    if(!$("what").value.trim()||!$("unit").value||!$("qty").value){alert("Add meg, mit ittál, és válaszd ki a mértékegységet és a mennyiséget.");return}
+    e.what=$("what").value.trim();e.unit=$("unit").value;e.qty=parseFloat($("qty").value);
+    const w=getWhy();if(w)e.why=w;
   }
   if($("note").value.trim())e.note=$("note").value.trim();
   data.days[sel]=e;
@@ -231,12 +282,14 @@ $("save").onclick=()=>{
 };
 $("clear").onclick=()=>{if(!data.days[sel]||confirm(sel+" adatainak törlése?")){delete data.days[sel];persist();openPanel(sel);renderAll()}};
 
-/* Főszámláló + figyelmeztetés */
+/* Főszámláló */
 function renderTop(){
-  const s=streak(),ld=lastDrink(),t=todayS(),te=data.days[t];
+  const s=streak(),ld=lastDrink(),t=todayS(),te=data.days[t],g=data.profile.goal;
+  $("h1").textContent=(data.profile.name?data.profile.name+" – ":"")+"napok ivás nélkül";
   $("big").textContent=s;
   $("big").classList.toggle("zero",s===0);
   $("sub").textContent=s===0?"Ma ittál. Holnap új nap, új széria.":("ivásmentes nap egymás után"+(ld?" (utolsó ivás: "+ld+")":""));
+  $("goal").innerHTML=g?`<div class="mute">Cél: ${Math.min(s,g)} / ${g} nap</div><div class="prog"><div style="width:${Math.min(100,s/g*100)}%"></div></div>`:"";
   let miss=0;
   for(let d=monthStart()>data.start?monthStart():data.start;d<t;d=addD(d,1))if(!data.days[d])miss++;
   const w=$("warn");
@@ -252,9 +305,8 @@ function renderStats(){
   let from=firstDay();
   if(p==="30"){const f=addD(t,-29);if(f>from)from=f}
   if(p==="month"&&monthStart()>from)from=monthStart();
-  let total=0,drank=0,conf=0,unconf=0;
+  let total=0,drank=0,conf=0,unconf=0,ml=0,shots=0,gl=0,maxMl=0,withQty=0;
   const wd=[0,0,0,0,0,0,0],what={},why={};
-  let maxDrinkRun=0;
   for(let d=from;d<=t;d=addD(d,1)){
     total++;const e=data.days[d];
     if(e&&e.s==="i"){
@@ -262,28 +314,29 @@ function renderStats(){
       const a=(e.what||"").toLowerCase(),b=(e.why||"").toLowerCase();
       if(a)what[a]=(what[a]||0)+1;
       if(b)why[b]=(why[b]||0)+1;
+      const m=mlOf(e);
+      if(m){ml+=m;withQty++;if(m>maxMl)maxMl=m;if(e.unit==="shot")shots+=e.qty;else gl+=e.qty}
     }else if(e)conf++;else unconf++;
   }
   const sobr=total-drank,pct=total?Math.round(sobr/total*100):0;
-  const ss=streaks(),avg=ss.length?(ss.reduce((a,b)=>a+b,0)/ss.length).toFixed(1):"0";
-  const bars=(o,max)=>{
-    const arr=Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const ss=streaks(),avg=ss.length?(ss.reduce((a,b)=>a+b,0)/ss.length).toFixed(1).replace(".",","):"0";
+  const bars=o=>{
+    const arr=Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,6);
     if(!arr.length)return '<p class="mute">Nincs adat.</p>';
     const m=Math.max(...arr.map(x=>x[1]));
     return arr.map(([k,v])=>`<div class="bar"><span title="${esc(k)}">${esc(k)}</span><div style="width:${v/m*55}%"></div><em>${v}</em></div>`).join("");
   };
   const wm=Math.max(...wd,1);
   const wdBars=WD.map((n,i)=>`<div class="bar"><span>${n}</span><div style="width:${wd[i]/wm*55}%"></div><em>${wd[i]}</em></div>`).join("");
-  // havi bontás (mindig a teljes adatból)
   const months={};
   for(let d=firstDay();d<=t;d=addD(d,1)){
-    const k=d.slice(0,7);months[k]=months[k]||{n:0,i:0};
-    months[k].n++;if(data.days[d]&&data.days[d].s==="i")months[k].i++;
+    const k=d.slice(0,7);months[k]=months[k]||{n:0,i:0,ml:0};
+    months[k].n++;const e=data.days[d];if(e&&e.s==="i"){months[k].i++;months[k].ml+=mlOf(e)}
   }
-  const mrows=Object.keys(months).sort().reverse().map(k=>{const m=months[k];return `<tr><td>${k}</td><td>${m.i}</td><td>${m.n-m.i}</td><td>${Math.round((m.n-m.i)/m.n*100)}%</td></tr>`}).join("");
+  const mrows=Object.keys(months).sort().reverse().map(k=>{const m=months[k];return `<tr><td>${k}</td><td>${m.i}</td><td>${m.n-m.i}</td><td>${Math.round((m.n-m.i)/m.n*100)}%</td><td>${fl(m.ml/1000)} l</td></tr>`}).join("");
   $("stats").innerHTML=`
   <div class="grid" style="margin-top:12px">
-    <div><b>${s0()}</b><span>jelenlegi széria</span></div>
+    <div><b>${streak()}</b><span>jelenlegi széria</span></div>
     <div><b>${Math.max(0,...ss)}</b><span>leghosszabb széria</span></div>
     <div><b>${avg}</b><span>átlagos széria</span></div>
     <div><b>${sobr}</b><span>ivásmentes nap</span></div>
@@ -291,14 +344,56 @@ function renderStats(){
     <div><b>${pct}%</b><span>ivásmentes arány</span></div>
   </div>
   <p class="mute">${total} nap az időszakban: ${conf} megerősítve ivásmentesnek, ${unconf} nincs kitöltve (ezek a számolásban ivásmentesnek számítanak).</p>
+  <h2 style="margin-top:14px">Mennyiség</h2>
+  <div class="grid">
+    <div><b>${fl(ml/1000)} l</b><span>összes ital</span></div>
+    <div><b>${fl(shots)}</b><span>shot (4 cl)</span></div>
+    <div><b>${fl(gl)}</b><span>pohár (500 ml)</span></div>
+    <div><b>${withQty?fl(ml/withQty/1000):"0"} l</b><span>átlag ivós napon</span></div>
+    <div><b>${fl(maxMl/1000)} l</b><span>legtöbb egy napon</span></div>
+  </div>
   <h2>Ivós napok a hét napjain</h2>${wdBars}
   <h2 style="margin-top:14px">Leggyakoribb italok</h2>${bars(what)}
   <h2 style="margin-top:14px">Leggyakoribb okok</h2>${bars(why)}
   <h2 style="margin-top:14px">Hónapok</h2>
-  <table><tr><th>Hónap</th><th>Ivós</th><th>Ivásmentes</th><th>Arány</th></tr>${mrows}</table>`;
+  <table><tr><th>Hónap</th><th>Ivós</th><th>Ivásmentes</th><th>Arány</th><th>Ital</th></tr>${mrows}</table>`;
 }
-const s0=()=>streak();
 $("period").onchange=renderStats;
+
+/* Profil */
+function renderProf(){
+  $("name").value=data.profile.name;
+  $("goalSel").value=String(data.profile.goal);
+  const n=Object.keys(data.days).length;
+  $("psum").textContent="Követés kezdete: "+firstDay()+" · rögzített napok: "+n;
+}
+$("name").oninput=()=>{data.profile.name=$("name").value.trim();persist();renderTop()};
+$("goalSel").onchange=()=>{data.profile.goal=parseInt($("goalSel").value,10);persist();renderTop()};
+$("wipe").onclick=()=>{
+  if(confirm("Biztosan törlöd az összes adatot?")&&confirm("Ez nem vonható vissza. Törlöd?")){
+    data={start:todayS(),days:{},profile:{name:"",goal:0}};persist();sel=null;$("panel").classList.add("hidden");renderAll();
+  }
+};
+$("export").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));a.download="napok-"+todayS()+".json";a.click()};
+$("import").onclick=()=>$("file").click();
+$("file").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const j=JSON.parse(r.result);if(j.days&&j.start){data=j;data.profile=Object.assign({name:"",goal:0},data.profile||{});persist();renderAll()}else alert("Hibás fájl.")}catch(x){alert("Hibás fájl.")}};
+  r.readAsText(f);
+};
+
+/* Lapok + dock */
+const TABS=["home","stats","prof"];
+function showTab(t){
+  TABS.forEach(k=>$("p-"+k).classList.toggle("hidden",k!==t));
+  document.querySelectorAll(".dock button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+  $("ind").style.transform="translateX("+TABS.indexOf(t)*100+"%)";
+  if(t==="stats")renderStats();
+  if(t==="prof")renderProf();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll(".dock button").forEach(b=>b.onclick=()=>showTab(b.dataset.t));
 
 /* Napi kérdés */
 function askToday(){
@@ -309,21 +404,12 @@ function askToday(){
   $("ask").classList.remove("hidden");
 }
 $("askNo").onclick=()=>{data.days[todayS()]={s:"n"};persist();$("ask").classList.add("hidden");renderAll()};
-$("askYes").onclick=()=>{$("ask").classList.add("hidden");view={y:new Date().getFullYear(),m:new Date().getMonth()};openPanel(todayS());mode="i";syncSeg();$("panel").scrollIntoView({behavior:"smooth"})};
+$("askYes").onclick=()=>{$("ask").classList.add("hidden");showTab("home");view={y:new Date().getFullYear(),m:new Date().getMonth()};openPanel(todayS());mode="i";syncSeg();$("panel").scrollIntoView({behavior:"smooth"})};
 $("askX").onclick=()=>$("ask").classList.add("hidden");
 
-/* Mentés / betöltés */
-$("export").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));a.download="napok-"+todayS()+".json";a.click()};
-$("import").onclick=()=>$("file").click();
-$("file").onchange=e=>{
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=()=>{try{const j=JSON.parse(r.result);if(j.days&&j.start){data=j;persist();renderAll()}else alert("Hibás fájl.")}catch(x){alert("Hibás fájl.")}};
-  r.readAsText(f);
-};
-
-function renderAll(){renderTop();renderCal();renderStats();if(sel&&!$("panel").classList.contains("hidden")){const e=data.days[sel]||{};}}
+function renderAll(){renderTop();renderCal();if(!$("p-stats").classList.contains("hidden"))renderStats();if(!$("p-prof").classList.contains("hidden"))renderProf()}
 renderAll();
+showTab("home");
 askToday();
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)renderAll()});
 </script>
