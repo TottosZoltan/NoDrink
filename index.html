@@ -3,12 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Napok</title>
+<title>NoDrink</title>
+<meta name="application-name" content="NoDrink">
+<meta name="apple-mobile-web-app-title" content="NoDrink">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#2f6f57">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root{--bg:#f3f5f1;--card:#fff;--ink:#1d2a24;--mute:#6a7a72;--ok:#2f6f57;--okbg:#d8ebe1;--bad:#b5532f;--badbg:#f4d9cd;--line:#dde3dc;--glass:rgba(255,255,255,.4);--glassb:rgba(255,255,255,.65);--ind:rgba(255,255,255,.7)}
 @media (prefers-color-scheme:dark){:root{--bg:#141a17;--card:#1d2621;--ink:#e6ede8;--mute:#8fa097;--ok:#5fbf97;--okbg:#244536;--bad:#e0875f;--badbg:#4a2c20;--line:#2c3832;--glass:rgba(40,58,50,.45);--glassb:rgba(255,255,255,.14);--ind:rgba(255,255,255,.16)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif;padding:18px 18px calc(110px + env(safe-area-inset-bottom,0px));max-width:600px;margin-inline:auto}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:2px;animation:rise .6s both}
+.brand b{font-size:22px;letter-spacing:.2px}
 h1{font-size:15px;font-weight:normal;color:var(--mute);margin:6px 0 0}
 h2{font-size:17px;margin:0 0 10px}
 .big{font-size:92px;line-height:1;margin:2px 0;color:var(--ok);font-variant-numeric:tabular-nums}
@@ -126,6 +138,10 @@ button.done{background:var(--ok)!important;color:#fff!important;border-color:var
 <body>
 <div class="bg"><i></i><i></i></div>
 <div class="toast" id="toast" role="status"></div>
+<div class="brand">
+  <svg viewBox="0 0 512 512" width="34" height="34" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f5a45"/><stop offset="1" stop-color="#5fbf97"/></linearGradient><linearGradient id="ls" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a5c"/><stop offset="1" stop-color="#ef5a3c"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#lg)"/><path d="M158 262H354L338 398Q336 416 318 416H194Q176 416 174 398Z" fill="#fff" opacity=".4"/><path d="M146 140H366L340 398Q338 420 316 420H196Q174 420 172 398Z" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-width="22" stroke-linejoin="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="#1f5a45" stroke-width="58" stroke-linecap="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="url(#ls)" stroke-width="36" stroke-linecap="round"/></svg>
+  <b>NoDrink</b>
+</div>
 <h1 id="h1">Napok ivás nélkül</h1>
 
 <!-- NAPLÓ -->
