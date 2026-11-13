@@ -66,16 +66,75 @@ th{color:var(--mute);border-top:0;font-size:12px}
 .dock button{flex:1;position:relative;z-index:1;background:none;border:0;padding:11px 0;border-radius:999px;font-size:14px;color:var(--mute);transition:color .2s}
 .dock button.on{color:var(--ink);font-weight:bold}
 @media (prefers-reduced-motion:reduce){.ind,.prog div{transition:none}}
+
+/* ---- szebb látvány + animációk ---- */
+:root{--sh:0 6px 24px rgba(30,60,45,.09)}
+@media (prefers-color-scheme:dark){:root{--sh:0 6px 24px rgba(0,0,0,.35)}}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5}
+.bg i:nth-child(1){width:300px;height:300px;background:var(--okbg);top:-80px;left:-60px;animation:drift1 18s ease-in-out infinite alternate}
+.bg i:nth-child(2){width:260px;height:260px;background:var(--badbg);bottom:60px;right:-70px;animation:drift2 22s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(120px,160px) scale(1.2)}}
+@keyframes drift2{to{transform:translate(-140px,-120px) scale(1.15)}}
+.card{border-radius:16px;box-shadow:var(--sh)}
+button,input,select,textarea{border-radius:10px}
+button{transition:background .2s,transform .15s,border-color .2s,color .2s,box-shadow .2s}
+button:active:not(:disabled){transform:scale(.95)}
+input,select,textarea{transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--ok);box-shadow:0 0 0 3px var(--okbg);outline:none}
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:22px 20px 14px;margin:10px 0 16px;color:#fff;background:linear-gradient(135deg,#2f6f57,#3f9c7a 60%,#5fbf97);box-shadow:0 12px 32px rgba(47,111,87,.35)}
+.hero.zero{background:linear-gradient(135deg,#b5532f,#d06f43 60%,#e0875f);box-shadow:0 12px 32px rgba(181,83,47,.35)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);transform:translateX(-100%);animation:shine 6s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,55%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.hero .big,.hero .big.zero{color:#fff;font-size:100px;text-shadow:0 4px 18px rgba(0,0,0,.18)}
+.big.pop{animation:numpop .5s}
+@keyframes numpop{40%{transform:scale(1.12)}}
+.hero .sub,.hero .mute{color:rgba(255,255,255,.9)}
+.hero .prog{background:rgba(255,255,255,.28);margin-bottom:6px}
+.hero .prog div{background:#fff}
+.prog div{transform-origin:left;animation:grow 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes slide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes ovin{from{opacity:0}to{opacity:1}}
+@keyframes cardin{from{opacity:0;transform:translateY(24px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes selpop{40%{transform:scale(1.18)}}
+@keyframes flash{0%{box-shadow:0 0 0 0 var(--ok);transform:scale(1.25)}100%{box-shadow:0 0 0 14px transparent;transform:none}}
+@keyframes donepulse{40%{transform:scale(1.06)}}
+.enter>*{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+.enter>*:nth-child(2){animation-delay:.07s}
+.enter>*:nth-child(3){animation-delay:.14s}
+.enter>*:nth-child(4){animation-delay:.21s}
+.grid div{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both}
+.grid div:nth-child(2){animation-delay:.05s}.grid div:nth-child(3){animation-delay:.1s}.grid div:nth-child(4){animation-delay:.15s}.grid div:nth-child(5){animation-delay:.2s}.grid div:nth-child(6){animation-delay:.25s}
+.bar div{transform-origin:left;animation:grow .8s cubic-bezier(.2,.8,.2,1) both}
+.cal button:not(:disabled):hover{transform:translateY(-2px)}
+.cal.anim button{animation:pop .4s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--i,0)*16ms)}
+.cal button.sel{animation:selpop .35s}
+.cal button.flash{animation:flash .9s ease-out}
+#panel:not(.hidden),#dfields:not(.hidden),#whyo:not(.hidden){animation:slide .4s cubic-bezier(.2,.8,.2,1)}
+.ov:not(.hidden){animation:ovin .3s}
+.ov:not(.hidden) .card{animation:cardin .5s cubic-bezier(.2,.9,.3,1.2)}
+button.done{background:var(--ok)!important;color:#fff!important;border-color:var(--ok)!important;animation:donepulse .6s}
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px) scale(.9);opacity:0;pointer-events:none;z-index:9;padding:11px 18px;border-radius:999px;background:var(--card);background:color-mix(in srgb,var(--card) 80%,transparent);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid var(--glassb);box-shadow:var(--sh);color:var(--ink);font-size:15px;white-space:nowrap;transition:transform .45s cubic-bezier(.3,1.4,.5,1),opacity .3s}
+.toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
+.toast b{color:var(--ok);margin-right:8px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<div class="bg"><i></i><i></i></div>
+<div class="toast" id="toast" role="status"></div>
 <h1 id="h1">Napok ivás nélkül</h1>
 
 <!-- NAPLÓ -->
 <section id="p-home">
-  <div class="big" id="big">0</div>
-  <p class="sub" id="sub"></p>
-  <div id="goal"></div>
+  <div class="hero" id="hero">
+    <div class="big" id="big">0</div>
+    <p class="sub" id="sub"></p>
+    <div id="goal"></div>
+  </div>
   <div class="card" id="warn"></div>
   <div class="card">
     <div class="nav">
@@ -95,7 +154,7 @@ th{color:var(--mute);border-top:0;font-size:12px}
         <div class="two">
           <div><label for="unit">Mértékegység</label>
             <select id="unit"><option value="">Válassz…</option><option value="shot">Shot (4 cl)</option><option value="pohar">Pohár (500 ml)</option></select></div>
-          <div><label for="qty">Mennyi?</label><select id="qty"></select></div>
+          <div><label for="qty">Mennyi? (darab)</label><input id="qty" type="text" inputmode="decimal" placeholder="pl. 3 vagy 200" autocomplete="off"></div>
         </div>
         <label for="why">Miért?</label>
         <select id="why"></select>
@@ -175,6 +234,17 @@ const diff=(a,b)=>Math.round((parse(a)-parse(b))/864e5);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const monthStart=()=>todayS().slice(0,8)+"01";
 const fl=v=>(Math.round(v*10)/10).toString().replace(".",",");
+const REDUCED=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let toastT,saveT,flashDate=null;
+function toast(msg){const t=$("toast");t.innerHTML="<b>✓</b>"+esc(msg);t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200)}
+function countTo(el,n){
+  const from=parseInt(el.dataset.v||"0",10);el.dataset.v=n;
+  if(REDUCED||from===n){el.textContent=n;return}
+  const t0=performance.now(),dur=Math.min(900,300+Math.abs(n-from)*40);
+  el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");
+  const step=now=>{const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(n-from)*e);if(k<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
+}
 const mlOf=e=>e&&e.unit&&e.qty?e.qty*ML[e.unit]:0;
 
 let data={start:todayS(),days:{},profile:{name:"",goal:0}};
@@ -207,7 +277,6 @@ function streaks(){
 }
 
 /* Űrlap mezők */
-$("qty").innerHTML='<option value="">Válassz…</option>'+(()=>{let h="";for(let v=0.5;v<=10;v+=0.5)h+=`<option value="${v}">${fl(v)}</option>`;for(let v=11;v<=20;v++)h+=`<option value="${v}">${v}</option>`;return h})();
 $("why").innerHTML='<option value="">Válassz okot…</option>'+REASONS.map(r=>`<option>${r}</option>`).join("")+'<option value="__o">Egyéb – saját beírása</option>';
 $("why").onchange=()=>$("whyo").classList.toggle("hidden",$("why").value!=="__o");
 function setWhy(v){
@@ -223,7 +292,7 @@ let view={y:new Date().getFullYear(),m:new Date().getMonth()};
 let sel=null,mode=null;
 const editable=d=>d>=monthStart()&&d<=todayS();
 
-function renderCal(){
+function renderCal(anim){
   $("mname").textContent=view.y+". "+MN[view.m];
   const first=new Date(view.y,view.m,1),n=new Date(view.y,view.m+1,0).getDate();
   const off=(first.getDay()+6)%7,t=todayS();
@@ -235,9 +304,11 @@ function renderCal(){
     else if(d<=t&&d>=data.start)c="todo";
     if(d===t)c+=" today";
     if(d===sel)c+=" sel";
-    h+=`<button class="${c}" data-d="${d}" ${d>t?"disabled":""}>${i}</button>`;
+    if(d===flashDate)c+=" flash";
+    h+=`<button class="${c}" style="--i:${i}" data-d="${d}" ${d>t?"disabled":""}>${i}</button>`;
   }
-  $("cal").innerHTML=h;
+  $("cal").classList.toggle("anim",!!anim);
+  $("cal").innerHTML=h;flashDate=null;
   const ny=new Date();
   $("next").disabled=view.y===ny.getFullYear()&&view.m===ny.getMonth();
 }
@@ -249,7 +320,7 @@ function openPanel(d){
   const ed=editable(d);
   $("what").value=e.what||"";
   $("unit").value=e.unit||"";
-  $("qty").value=e.qty?String(e.qty):"";
+  $("qty").value=e.qty?String(e.qty).replace(".",","):"";
   $("note").value=e.note||"";
   setWhy(e.why||"");
   ["what","unit","qty","why","whyo","note","bn","bi","save","clear"].forEach(k=>$(k).disabled=!ed);
@@ -263,31 +334,36 @@ function syncSeg(){
   $("dfields").classList.toggle("hidden",mode!=="i");
 }
 $("cal").onclick=e=>{const d=e.target.dataset&&e.target.dataset.d;if(d)openPanel(d)};
-$("prev").onclick=()=>{view.m--;if(view.m<0){view.m=11;view.y--}renderCal()};
-$("next").onclick=()=>{view.m++;if(view.m>11){view.m=0;view.y++}renderCal()};
+$("prev").onclick=()=>{view.m--;if(view.m<0){view.m=11;view.y--}renderCal(true)};
+$("next").onclick=()=>{view.m++;if(view.m>11){view.m=0;view.y++}renderCal(true)};
 $("bn").onclick=()=>{mode="n";syncSeg()};
 $("bi").onclick=()=>{mode="i";syncSeg()};
 $("save").onclick=()=>{
   if(!mode){alert("Válaszd ki: Nem ittam vagy Ittam.");return}
   const e={s:mode};
   if(mode==="i"){
-    if(!$("what").value.trim()||!$("unit").value||!$("qty").value){alert("Add meg, mit ittál, és válaszd ki a mértékegységet és a mennyiséget.");return}
-    e.what=$("what").value.trim();e.unit=$("unit").value;e.qty=parseFloat($("qty").value);
+    const q=parseFloat($("qty").value.replace(",","."));
+    if(!$("what").value.trim()||!$("unit").value){alert("Add meg, mit ittál, és válaszd ki a mértékegységet.");return}
+    if(!(q>0)||q>1000){alert("A mennyiség 0-nál nagyobb, legfeljebb 1000 lehet (pl. 3 vagy 2,5).");return}
+    e.what=$("what").value.trim();e.unit=$("unit").value;e.qty=q;
     const w=getWhy();if(w)e.why=w;
   }
   if($("note").value.trim())e.note=$("note").value.trim();
   data.days[sel]=e;
   if(sel<data.start)data.start=sel;
-  persist();renderAll();
+  persist();flashDate=sel;renderAll();
+  const b=$("save");b.textContent="Elmentve ✓";b.classList.add("done");
+  clearTimeout(saveT);saveT=setTimeout(()=>{b.textContent="Mentés";b.classList.remove("done")},1600);
+  toast("Elmentve: "+sel);
 };
-$("clear").onclick=()=>{if(!data.days[sel]||confirm(sel+" adatainak törlése?")){delete data.days[sel];persist();openPanel(sel);renderAll()}};
+$("clear").onclick=()=>{if(!data.days[sel]||confirm(sel+" adatainak törlése?")){delete data.days[sel];persist();openPanel(sel);renderAll();toast("Nap törölve")}};
 
 /* Főszámláló */
 function renderTop(){
   const s=streak(),ld=lastDrink(),t=todayS(),te=data.days[t],g=data.profile.goal;
   $("h1").textContent=(data.profile.name?data.profile.name+" – ":"")+"napok ivás nélkül";
-  $("big").textContent=s;
-  $("big").classList.toggle("zero",s===0);
+  countTo($("big"),s);
+  $("big").classList.toggle("zero",s===0);$("hero").classList.toggle("zero",s===0);
   $("sub").textContent=s===0?"Ma ittál. Holnap új nap, új széria.":("ivásmentes nap egymás után"+(ld?" (utolsó ivás: "+ld+")":""));
   $("goal").innerHTML=g?`<div class="mute">Cél: ${Math.min(s,g)} / ${g} nap</div><div class="prog"><div style="width:${Math.min(100,s/g*100)}%"></div></div>`:"";
   let miss=0;
@@ -367,19 +443,19 @@ function renderProf(){
   const n=Object.keys(data.days).length;
   $("psum").textContent="Követés kezdete: "+firstDay()+" · rögzített napok: "+n;
 }
-$("name").oninput=()=>{data.profile.name=$("name").value.trim();persist();renderTop()};
-$("goalSel").onchange=()=>{data.profile.goal=parseInt($("goalSel").value,10);persist();renderTop()};
+let nameT;$("name").oninput=()=>{data.profile.name=$("name").value.trim();persist();renderTop();clearTimeout(nameT);nameT=setTimeout(()=>toast("Név elmentve"),700)};
+$("goalSel").onchange=()=>{data.profile.goal=parseInt($("goalSel").value,10);persist();renderTop();toast("Cél elmentve")};
 $("wipe").onclick=()=>{
   if(confirm("Biztosan törlöd az összes adatot?")&&confirm("Ez nem vonható vissza. Törlöd?")){
-    data={start:todayS(),days:{},profile:{name:"",goal:0}};persist();sel=null;$("panel").classList.add("hidden");renderAll();
+    data={start:todayS(),days:{},profile:{name:"",goal:0}};persist();sel=null;$("panel").classList.add("hidden");renderAll();toast("Minden adat törölve");
   }
 };
-$("export").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));a.download="napok-"+todayS()+".json";a.click()};
+$("export").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));a.download="napok-"+todayS()+".json";a.click();toast("Fájl elmentve")};
 $("import").onclick=()=>$("file").click();
 $("file").onchange=e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
-  r.onload=()=>{try{const j=JSON.parse(r.result);if(j.days&&j.start){data=j;data.profile=Object.assign({name:"",goal:0},data.profile||{});persist();renderAll()}else alert("Hibás fájl.")}catch(x){alert("Hibás fájl.")}};
+  r.onload=()=>{try{const j=JSON.parse(r.result);if(j.days&&j.start){data=j;data.profile=Object.assign({name:"",goal:0},data.profile||{});persist();renderAll();toast("Adatok betöltve")}else alert("Hibás fájl.")}catch(x){alert("Hibás fájl.")}};
   r.readAsText(f);
 };
 
@@ -389,6 +465,8 @@ function showTab(t){
   TABS.forEach(k=>$("p-"+k).classList.toggle("hidden",k!==t));
   document.querySelectorAll(".dock button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   $("ind").style.transform="translateX("+TABS.indexOf(t)*100+"%)";
+  const pg=$("p-"+t);pg.classList.remove("enter");void pg.offsetWidth;pg.classList.add("enter");
+  if(t==="home")renderCal(true);
   if(t==="stats")renderStats();
   if(t==="prof")renderProf();
   window.scrollTo(0,0);
@@ -403,7 +481,7 @@ function askToday(){
   $("askd").textContent=t+" ("+WDL[new Date().getDay()]+")";
   $("ask").classList.remove("hidden");
 }
-$("askNo").onclick=()=>{data.days[todayS()]={s:"n"};persist();$("ask").classList.add("hidden");renderAll()};
+$("askNo").onclick=()=>{data.days[todayS()]={s:"n"};persist();$("ask").classList.add("hidden");flashDate=todayS();renderAll();toast("Rögzítve: ma nem ittál")};
 $("askYes").onclick=()=>{$("ask").classList.add("hidden");showTab("home");view={y:new Date().getFullYear(),m:new Date().getMonth()};openPanel(todayS());mode="i";syncSeg();$("panel").scrollIntoView({behavior:"smooth"})};
 $("askX").onclick=()=>$("ask").classList.add("hidden");
 
