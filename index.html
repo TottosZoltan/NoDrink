@@ -2,7 +2,7 @@
 <html lang="hu">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>NoDrink</title>
 <meta name="application-name" content="NoDrink">
 <meta name="apple-mobile-web-app-title" content="NoDrink">
@@ -158,11 +158,35 @@ body[data-m=ene]{--ok:#3a6fb0;--okbg:#d9e6f6;--hg:linear-gradient(135deg,#2f5f9f
 @keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
 .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .keys button{width:100%;padding:14px 0;font-size:20px}
+html,body{height:100%}
+body{position:fixed;inset:0;width:100%;margin:0;padding:0;max-width:none;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+*{touch-action:pan-x pan-y;-webkit-tap-highlight-color:transparent}
+#app{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:none;padding:calc(18px + env(safe-area-inset-top,0px)) 18px calc(120px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:600px;margin:0 auto}
+.dock,.dock *{touch-action:none}
+.dock{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.hero{text-align:center;padding:20px 16px 14px}
+.ringw{position:relative;width:190px;height:190px;margin:0 auto 6px}
+.ring{width:100%;height:100%;transform:rotate(-90deg)}
+.rb{fill:none;stroke:rgba(255,255,255,.25);stroke-width:12}
+.rf{fill:none;stroke:#fff;stroke-width:12;stroke-linecap:round;stroke-dasharray:540.35;stroke-dashoffset:540.35;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hero .big,.hero .big.zero{font-size:72px}
+.rc .sub{margin:0;font-size:15px}
+.week{display:flex;gap:6px;margin-bottom:12px}
+.week button{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 0;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:16px;line-height:1.25;box-shadow:var(--sh)}
+.week small{font-size:11px;color:var(--mute)}
+.week .ok{background:var(--okbg);border-color:var(--ok)}
+.week .bad{background:var(--badbg);border-color:var(--bad)}
+.week .todo{border-style:dashed;border-color:var(--mute)}
+.week .today{box-shadow:0 0 0 2px var(--ink) inset}
+#chips div{box-shadow:var(--sh);background:var(--card);border:1px solid var(--line)}
 </style>
 </head>
 <body>
 <div class="bg"><i></i><i></i></div>
 <div class="toast" id="toast" role="status"></div>
+<main id="app"><div class="wrap">
 <div class="brand">
   <svg viewBox="0 0 512 512" width="34" height="34" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f5a45"/><stop offset="1" stop-color="#5fbf97"/></linearGradient><linearGradient id="ls" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a5c"/><stop offset="1" stop-color="#ef5a3c"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#lg)"/><path d="M158 262H354L338 398Q336 416 318 416H194Q176 416 174 398Z" fill="#fff" opacity=".4"/><path d="M146 140H366L340 398Q338 420 316 420H196Q174 420 172 398Z" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-width="22" stroke-linejoin="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="#1f5a45" stroke-width="58" stroke-linecap="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="url(#ls)" stroke-width="36" stroke-linecap="round"/></svg>
   <b>NoDrink</b>
@@ -173,10 +197,13 @@ body[data-m=ene]{--ok:#3a6fb0;--okbg:#d9e6f6;--hg:linear-gradient(135deg,#2f5f9f
 <!-- NAPLÓ -->
 <section id="p-home">
   <div class="hero" id="hero">
-    <div class="big" id="big">0</div>
-    <p class="sub" id="sub"></p>
+    <div class="ringw"><svg viewBox="0 0 200 200" class="ring" aria-hidden="true"><circle class="rb" cx="100" cy="100" r="86"/><circle class="rf" id="rf" cx="100" cy="100" r="86"/></svg>
+      <div class="rc"><div class="big" id="big">0</div><p class="sub" id="sub">nap</p></div></div>
+    <p class="mute" id="since" style="margin:0 0 4px"></p>
     <div id="goal"></div>
   </div>
+  <div class="week" id="week"></div>
+  <div class="grid" id="chips"></div>
   <div class="card" id="warn"></div>
   <div class="card">
     <div class="nav">
@@ -198,6 +225,8 @@ body[data-m=ene]{--ok:#3a6fb0;--okbg:#d9e6f6;--hg:linear-gradient(135deg,#2f5f9f
             <select id="unit"><option value="">Válassz…</option><option value="shot">Shot (4 cl)</option><option value="pohar">Pohár (500 ml)</option></select></div>
           <div><label for="qty">Mennyi? (darab)</label><input id="qty" type="text" inputmode="decimal" placeholder="pl. 3 vagy 200" autocomplete="off"></div>
         </div>
+        <label for="dcost">Mennyibe került? (Ft)</label>
+        <input id="dcost" type="text" inputmode="numeric" placeholder="pl. 1800" autocomplete="off">
         <label for="why">Miért?</label>
         <select id="why"></select>
         <input id="whyo" class="hidden" placeholder="Saját ok beírása" style="margin-top:8px" autocomplete="off">
@@ -254,6 +283,7 @@ body[data-m=ene]{--ok:#3a6fb0;--okbg:#d9e6f6;--hg:linear-gradient(135deg,#2f5f9f
   </div>
 </section>
 
+</div></main>
 <nav class="dock" aria-label="Fő navigáció">
   <div class="dock-in">
     <span class="ind" id="ind"></span>
@@ -388,9 +418,9 @@ function openPanel(d){
   $("what").value=e.what||"";
   $("unit").value=e.unit||"";
   $("qty").value=e.qty?String(e.qty).replace(".",","):"";
-  $("note").value=e.note||"";$("crave").value=typeof e.crave==="number"?String(e.crave):"";
+  $("note").value=e.note||"";$("crave").value=typeof e.crave==="number"?String(e.crave):"";$("dcost").value=e.cost?String(e.cost):"";
   setWhy(e.why||"");
-  ["what","unit","qty","why","whyo","note","crave","bn","bi","save","clear"].forEach(k=>$(k).disabled=!ed);
+  ["what","unit","qty","why","whyo","note","crave","dcost","bn","bi","save","clear"].forEach(k=>$(k).disabled=!ed);
   if(!ed)$("ptitle").textContent+=" – csak megtekintés";
   if(e.s==="i"&&!e.unit&&e.amount)$("ptitle").textContent+=" · korábbi mennyiség: "+e.amount;
   syncSeg();renderCal();
@@ -413,7 +443,7 @@ $("save").onclick=()=>{
     if(!$("what").value.trim()||!$("unit").value){alert("Add meg, mit ittál, és válaszd ki a mértékegységet.");return}
     if(!(q>0)||q>1000){alert("A mennyiség 0-nál nagyobb, legfeljebb 1000 lehet (pl. 3 vagy 2,5).");return}
     e.what=$("what").value.trim();e.unit=$("unit").value;e.qty=q;
-    const w=getWhy();if(w)e.why=w;
+    const w=getWhy();if(w)e.why=w;const cst=parseInt($("dcost").value.replace(/\D/g,""),10);if(cst>0)e.cost=cst;
   }
   if($("note").value.trim())e.note=$("note").value.trim();
   if($("crave").value!=="")e.crave=parseInt($("crave").value,10);
@@ -432,8 +462,8 @@ function renderTop(){
   $("h1").textContent=(store.name?store.name+" – ":"")+C().title;
   countTo($("big"),s);
   $("big").classList.toggle("zero",s===0);$("hero").classList.toggle("zero",s===0);
-  $("sub").textContent=s===0?"Ma ittál. Holnap új nap, új széria.":("ivásmentes nap egymás után"+(ld?" (utolsó ivás: "+ld+")":""));
-  $("goal").innerHTML=g?`<div class="mute">Cél: ${Math.min(s,g)} / ${g} nap</div><div class="prog"><div style="width:${Math.min(100,s/g*100)}%"></div></div>`:"";
+  $("sub").textContent="nap";$("since").textContent=s===0?"Ma ittál. Holnap új nap, új széria.":(ld?"Utolsó "+(store.mode==="alc"?"ivás":"energiaital")+": "+ld:"Szép munka!");
+  const tg=g||MS.find(m=>m>s)||MS[MS.length-1];$("rf").style.strokeDashoffset=540.35*(1-Math.min(1,s/tg));$("goal").innerHTML=`<div class="mute">${g?"Cél":"Következő jelvény"}: ${Math.min(s,tg)} / ${tg} nap</div>`;
   let miss=0;
   for(let d=monthStart()>data.start?monthStart():data.start;d<t;d=addD(d,1))if(!data.days[d])miss++;
   const w=$("warn");
@@ -442,7 +472,7 @@ function renderTop(){
     w.innerHTML=(!te?"A mai nap még nincs kitöltve. ":"")+(miss?`Az idei hónapban ${miss} korábbi nap nincs kitöltve (szaggatott keret a naptárban).`:"");
   }else w.classList.add("hidden");
   if(data.profile.cost)$("goal").innerHTML+=`<div class="mute">Megspórolt: ${(soberDays()*data.profile.cost).toLocaleString("hu-HU")} Ft</div>`;
-  celebrate();
+  renderWeek();renderChips();celebrate();
 }
 
 /* Statisztika */
@@ -485,6 +515,14 @@ function renderStats(){
   const wk=[],mon=addD(t,-((parse(t).getDay()+6)%7));
   for(let i=11;i>=0;i--){const ws=addD(mon,-7*i);let c=0,n=0;for(let k=0;k<7;k++){const d=addD(ws,k);if(d>t||d<firstDay())continue;n++;if(!(data.days[d]&&data.days[d].s==="i"))c++}wk.push([ws,c,n])}
   const chart=`<svg viewBox="0 0 300 110" width="100%" role="img" aria-label="Heti ivásmentes napok">`+wk.map((w,i)=>{const h=w[2]?w[1]/7*80:0;return `<rect class="cb" style="animation-delay:${i*40}ms" x="${i*25+4}" y="${90-h}" width="17" height="${Math.max(h,2)}" rx="4" fill="var(--ok)"/><text x="${i*25+12.5}" y="104" font-size="8" text-anchor="middle" fill="var(--mute)">${w[0].slice(5)}</text>`}).join("")+`</svg>`;
+  const cur=t.slice(0,7),pk=addD(cur+"-01",-1).slice(0,7);let rk=pk;
+  if(cmpMode==="drink"){const ks=[...new Set(Object.keys(data.days).filter(d=>data.days[d].s==="i").map(d=>d.slice(0,7)))].filter(k=>k<cur).sort();rk=ks.length?ks[ks.length-1]:null}
+  const A=monthStat(cur),B=rk?monthStat(rk):null,dif=B?B.sp-A.sp:0;
+  let allSp=0;for(const d in data.days)allSp+=data.days[d].cost||0;
+  const cmpH=`<h2 style="margin-top:14px">Költés-összehasonlítás</h2>
+  <select id="cmp"><option value="prev" ${cmpMode==="prev"?"selected":""}>Előző hónaphoz képest</option><option value="drink" ${cmpMode==="drink"?"selected":""}>Utolsó ivós hónaphoz képest</option></select>
+  ${B&&B.n?`<div class="grid" style="margin-top:10px"><div><b>${ft(A.sp)}</b><span>${cur} (eddig)</span></div><div><b>${ft(B.sp)}</b><span>${rk}</span></div><div><b style="color:${dif>=0?"var(--ok)":"var(--bad)"}">${dif<0?"-":""}${ft(Math.abs(dif))}</b><span>${dif>=0?"megspórolt":"többletköltés"}${B.sp?" ("+Math.round(Math.abs(dif)/B.sp*100)+"%)":""}</span></div></div>`:'<p class="mute">Még nincs korábbi ivós hónap az összehasonlításhoz.</p>'}
+  <p class="mute">A költés a napokhoz megadott összegekből számolódik. Összes rögzített költés: ${ft(allSp)}</p>`;
   $("stats").innerHTML=`
   <div class="grid" style="margin-top:12px">
     <div><b>${streak()}</b><span>jelenlegi széria</span></div>
@@ -505,6 +543,7 @@ function renderStats(){
   </div>
   <h2>Késztetés (0–10)</h2>
   <div class="grid"><div><b>${av([crI[0]+crN[0],crI[1]+crN[1]])}</b><span>átlag</span></div><div><b>${av(crI)}</b><span>ivós napokon</span></div><div><b>${av(crN)}</b><span>ivásmentes napokon</span></div></div>
+  ${cmpH}
   <h2 style="margin-top:14px">Heti ivásmentes napok</h2>${chart}
   <h2 style="margin-top:14px">Jelvények</h2><div class="badges">${MS.map(m=>`<div class="badge ${best>=m?"on":""}"><b>${m}</b><span>nap</span></div>`).join("")}</div>
   <h2 style="margin-top:14px">Ivós napok a hét napjain</h2>${wdBars}
@@ -548,9 +587,28 @@ function showTab(t){
   if(t==="home")renderCal(true);
   if(t==="stats")renderStats();
   if(t==="prof")renderProf();
-  window.scrollTo(0,0);
+  $("app").scrollTo(0,0);
 }
 document.querySelectorAll(".dock button").forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+
+/* HUD + költség segédek */
+let cmpMode="prev";
+const ft=v=>Math.round(v).toLocaleString("hu-HU")+" Ft";
+function monthStat(k){let sp=0,n=0;for(const d in data.days){if(d.slice(0,7)===k&&data.days[d].s==="i"){n++;sp+=data.days[d].cost||0}}return{sp,n}}
+function renderWeek(){
+  const t=todayS();let h="";
+  for(let i=6;i>=0;i--){const d=addD(t,-i),e=data.days[d],c=e?(e.s==="i"?"bad":"ok"):(d>=data.start?"todo":"");
+    h+=`<button class="${c}${d===t?" today":""}" data-d="${d}"><small>${WD[(parse(d).getDay()+6)%7]}</small>${parseInt(d.slice(8),10)}</button>`}
+  $("week").innerHTML=h;
+}
+$("week").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset.d;view={y:+d.slice(0,4),m:+d.slice(5,7)-1};openPanel(d);$("panel").scrollIntoView({behavior:"smooth",block:"center"})};
+function renderChips(){
+  const t=todayS(),cur=t.slice(0,7),ms=monthStat(cur);let sd=0;
+  for(let d=cur+"-01";d<=t;d=addD(d,1))if(!(data.days[d]&&data.days[d].s==="i"))sd++;
+  $("chips").innerHTML=`<div><b>${Math.max(0,...streaks())}</b><span>legjobb széria</span></div><div><b>${sd}</b><span>ivásmentes e hónapban</span></div><div><b>${ms.sp?ft(ms.sp):ms.n}</b><span>${ms.sp?"költés e hónapban":"ivós nap e hónapban"}</span></div>`;
+}
+$("stats").onchange=e=>{if(e.target.id==="cmp"){cmpMode=e.target.value;renderStats()}};
+["gesturestart","gesturechange","gestureend"].forEach(v=>document.addEventListener(v,e=>e.preventDefault()));
 
 /* Társ-váltó */
 function setMode(m,silent){
