@@ -201,6 +201,16 @@ body[data-m=cus]{--ok:#7a58a8;--okbg:#e8def5;--hg:linear-gradient(135deg,#5b3f8c
 @media (prefers-color-scheme:dark){body[data-m=cus]{--ok:#b293e0;--okbg:#352a4a}}
 :root[data-theme=dark] body[data-m=cus]{--ok:#b293e0;--okbg:#352a4a}
 :root[data-theme=light] body[data-m=cus]{--ok:#7a58a8;--okbg:#e8def5}
+.litebtn{margin-left:auto;padding:6px 12px;font-size:13px;border-radius:999px}
+.quick{display:none;margin:0 0 12px;text-align:center}
+.qb{display:flex;gap:10px}
+.qb button{flex:1;padding:16px;font-size:18px;border-radius:14px}
+body.lite .quick{display:block}
+body.lite :is(#chips,#lim,#risk,#weekc,#evt,#sg,#bk,#warn,#planc,#reflc,.leg,#period,#snapc,#icsn,#since,
+ label[for=dcost],#dcost,label[for=crave],#crave,label[for=mood],#mood,label[for=refl],#refl,label[for=note],#note,
+ label[for=cn],#cn,label[for=icsT],.two:has(#icsT),label[for=limD],#limD,label[for=limQ],#limQ,label[for=alts],#alts,
+ label[for=sgn],#sgn,label[for=sga],#sga,label[for=oldQ],#oldQ,label[for=oldC],#oldC,label[for=plans],#plans,.dock button[data-t=lib]){display:none!important}
+body.lite .ind{width:calc((100% - 10px)/3)}
 </style>
 </head>
 <body>
@@ -210,6 +220,7 @@ body[data-m=cus]{--ok:#7a58a8;--okbg:#e8def5;--hg:linear-gradient(135deg,#5b3f8c
 <div class="brand">
   <svg viewBox="0 0 512 512" width="34" height="34" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f5a45"/><stop offset="1" stop-color="#5fbf97"/></linearGradient><linearGradient id="ls" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a5c"/><stop offset="1" stop-color="#ef5a3c"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#lg)"/><path d="M158 262H354L338 398Q336 416 318 416H194Q176 416 174 398Z" fill="#fff" opacity=".4"/><path d="M146 140H366L340 398Q338 420 316 420H196Q174 420 172 398Z" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-width="22" stroke-linejoin="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="#1f5a45" stroke-width="58" stroke-linecap="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="url(#ls)" stroke-width="36" stroke-linecap="round"/></svg>
   <b>NoDrink</b>
+  <button class="litebtn" id="liteB">Egyszerű nézet</button>
 </div>
 <div class="mswitch" id="msw"><span class="mi" id="mi"></span><button data-m="alc" class="on">Alkohol</button><button data-m="ene">Energiaital</button><button data-m="cus">Saját</button></div>
 <h1 id="h1">Napok ivás nélkül</h1>
@@ -222,6 +233,7 @@ body[data-m=cus]{--ok:#7a58a8;--okbg:#e8def5;--hg:linear-gradient(135deg,#5b3f8c
     <p class="mute" id="since" style="margin:0 0 4px"></p>
     <div id="goal"></div>
   </div>
+  <div class="quick"><p class="mute" id="qst"></p><div class="qb"><button class="main" id="qNo">Ma nem ittam</button><button id="qYes">Ma ittam</button></div></div>
   <button class="sosb" id="sosB">SOS – kívánásom van</button>
   <div class="week" id="week"></div>
   <div class="grid" id="chips"></div>
@@ -274,7 +286,7 @@ body[data-m=cus]{--ok:#7a58a8;--okbg:#e8def5;--hg:linear-gradient(135deg,#5b3f8c
       <div class="row"><button class="main" id="save">Mentés</button><button class="danger" id="clear">Nap törlése</button></div>
     </div>
   </div>
-  <div class="card">
+  <div class="card" id="planc">
     <h2>Alkalmak (előre tervezés)</h2>
     <p class="mute">Vidd fel a közelgő eseményeket (buli, esküvő), és add meg a tervedet. Az esemény előtt emlékeztet, utána kiértékeli.</p>
     <label for="ed">Dátum</label><input type="date" id="ed">
@@ -328,7 +340,7 @@ body[data-m=cus]{--ok:#7a58a8;--okbg:#e8def5;--hg:linear-gradient(135deg,#5b3f8c
     <p class="mute" id="pinst" style="margin-top:8px"></p>
     <label for="icsT">Napi emlékeztető időpontja</label>
     <div class="two"><input type="time" id="icsT" value="20:00"><button id="icsB">Letöltés (.ics)</button></div>
-    <p class="mute" style="margin-top:6px">A letöltött fájlt a telefonod naptára megnyitja, és napi ismétlődő értesítést állít be.</p>
+    <p class="mute" id="icsn" style="margin-top:6px">A letöltött fájlt a telefonod naptára megnyitja, és napi ismétlődő értesítést állít be.</p>
     <p class="mute">A PIN csak a képernyőt zárja le ebben a böngészőben, az adatokat nem titkosítja.</p>
   </div>
   <div class="card">
@@ -350,7 +362,7 @@ body[data-m=cus]{--ok:#7a58a8;--okbg:#e8def5;--hg:linear-gradient(135deg,#5b3f8c
     <label for="plans">Ha–akkor tervek (soronként egy, pl. „Ha stresszes vagyok, akkor sétálok”)</label><textarea id="plans" rows="4"></textarea>
     <p class="mute" id="psum" style="margin-top:12px"></p>
   </div>
-  <div class="card">
+  <div class="card" id="snapc">
     <h2>Biztonsági mentések</h2>
     <p class="mute">Az app naponta egyszer automatikusan másolatot készít az adataidról a böngészőben (az utolsó 7-et tartja meg). Ez nem helyettesíti a fájlba mentést.</p>
     <div id="snaps"></div>
@@ -573,7 +585,7 @@ function renderTop(){
     w.innerHTML=(!te?"A mai nap még nincs kitöltve. ":"")+(miss?`Az idei hónapban ${miss} korábbi nap nincs kitöltve (szaggatott keret a naptárban).`:"");
   }else w.classList.add("hidden");
   if(data.profile.cost)$("goal").innerHTML+=`<div class="mute">Megspórolt: ${(soberDays()*data.profile.cost).toLocaleString("hu-HU")} Ft</div>`;
-  renderWeek();renderChips();renderRisk();renderLimit();renderWeekCard();renderEvtBanner();renderSg();renderBk();renderRefl();renderEvents();celebrate();
+  renderQuick();renderWeek();renderChips();renderRisk();renderLimit();renderWeekCard();renderEvtBanner();renderSg();renderBk();renderRefl();renderEvents();celebrate();
 }
 
 /* Statisztika */
@@ -641,6 +653,10 @@ function renderStats(){
   const projH=(oq||oc)?`<h2 style="margin-top:14px">Egy évre vetítve</h2><div class="grid"><div><b>${fl(oq*52)}</b><span>adag a régi szokással</span></div><div><b>${fl(pa*k365)}</b><span>adag a mostani ütemben</span></div><div><b>${fl(oq*52-pa*k365)}</b><span>különbség (adag)</span></div><div><b>${ft(oc*52)}</b><span>költés a régi szokással</span></div><div><b>${ft(ps*k365)}</b><span>költés a mostani ütemben</span></div><div><b>${ft(oc*52-ps*k365)}</b><span>különbség (Ft / év)</span></div></div><p class="mute">Az utolsó 30 nap alapján, évre vetítve. Becslés.</p>`:"";
   const sNow=streak(),fs=C().facts||[];
   const tlH=`<h2 style="margin-top:14px">Mi történhet a testeddel?</h2>`+fs.map(([d,tx])=>`<div class="entry" style="opacity:${sNow>=d?1:.5}"><div><b>${d} nap${sNow>=d?" ✓":" (még "+(d-sNow)+")"}</b><small>${esc(tx)}</small></div></div>`).join("")+`<p class="mute">Általános tájékoztatás, nem orvosi tanács.${store.mode==="alc"?" Ha korábban nagy mennyiséget, naponta ittál, az abbahagyás elvonási tüneteket okozhat, ami veszélyes lehet: ilyenkor egyeztess orvossal.":""}</p>`;
+  if(store.lite){
+    $("stats").innerHTML=`<div class="grid" style="margin-top:12px"><div><b>${streak()}</b><span>jelenlegi széria</span></div><div><b>${Math.max(0,...ss)}</b><span>legjobb széria</span></div><div><b>${pct}%</b><span>ivásmentes arány</span></div><div><b>${sobr}</b><span>ivásmentes nap</span></div><div><b>${drank}</b><span>ivós nap</span></div><div><b>${A.sp?ft(A.sp):"–"}</b><span>költés e hónapban</span></div></div><p class="mute">Időszak: ${({30:"utolsó 30 nap",month:"ez a hónap",all:"teljes időszak"})[p]}</p><h2 style="margin-top:14px">Heti ivásmentes napok</h2>${chart}`;
+    return;
+  }
   $("stats").innerHTML=`
   <div class="grid" style="margin-top:12px">
     <div><b>${streak()}</b><span>jelenlegi széria</span></div>
@@ -702,10 +718,12 @@ $("file").onchange=e=>{
 
 /* Lapok + dock */
 const TABS=["home","lib","stats","prof"];
+let curT="home";
 function showTab(t){
+  if(store.lite&&t==="lib")t="home";curT=t;const TB=store.lite?TABS.filter(x=>x!=="lib"):TABS;
   TABS.forEach(k=>$("p-"+k).classList.toggle("hidden",k!==t));
   document.querySelectorAll(".dock button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
-  $("ind").style.transform="translateX("+TABS.indexOf(t)*100+"%)";
+  $("ind").style.transform="translateX("+TB.indexOf(t)*100+"%)";
   const pg=$("p-"+t);pg.classList.remove("enter");void pg.offsetWidth;pg.classList.add("enter");
   if(t==="home")renderCal(true);
   if(t==="lib")renderLib();
@@ -917,6 +935,16 @@ async function shareWeek(){
   });
 }
 
+/* Egyszerű (light) nézet */
+function applyLite(){
+  document.body.classList.toggle("lite",!!store.lite);
+  $("liteB").textContent=store.lite?"Teljes nézet":"Egyszerű nézet";
+}
+$("liteB").onclick=()=>{store.lite=!store.lite;persist();applyLite();showTab(curT);renderAll();toast(store.lite?"Egyszerű nézet bekapcsolva":"Teljes nézet bekapcsolva")};
+function renderQuick(){const e=data.days[todayS()];$("qst").textContent=!e?"Ma még nincs kitöltve":(e.s==="i"?"Ma ittál":"Ma nem ittál ✓")}
+$("qNo").onclick=()=>{const t=todayS();if(data.days[t]&&data.days[t].s==="i"&&!confirm("Ma már rögzítettél ivást. Felülírod?"))return;data.days[t]={s:"n"};persist();flashDate=t;renderAll();toast("Rögzítve: ma nem ittál")};
+$("qYes").onclick=()=>$("askYes").onclick();
+
 /* Társ-váltó */
 function setMode(m,silent){
   store.mode=m;data=store.t[m];document.body.dataset.m=m;persist();
@@ -981,7 +1009,7 @@ $("askYes").onclick=()=>{$("ask").classList.add("hidden");showTab("home");view={
 $("askX").onclick=()=>$("ask").classList.add("hidden");
 
 function renderAll(){renderTop();renderCal();if(!$("p-stats").classList.contains("hidden"))renderStats();if(!$("p-prof").classList.contains("hidden"))renderProf();if(!$("p-lib").classList.contains("hidden"))renderLib()}
-applyTheme();
+applyTheme();applyLite();
 setMode(store.mode,true);
 showTab("home");
 lockUp();
