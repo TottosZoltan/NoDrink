@@ -219,17 +219,62 @@ body.lite .ind{width:calc((100% - 10px)/3)}
 .tile span{color:var(--mute);font-size:14px}
 #multiB.on{background:var(--okbg);border-color:var(--ok)}
 #auto.ok{color:var(--ok)}
+body[data-m=p1]{--ok:#7a58a8;--okbg:#e8def5;--hg:linear-gradient(135deg,#5b3f8c,#7a58a8 60%,#a98ad6);--hs:rgba(91,63,140,.35)}
+body[data-m=p2]{--ok:#b8741a;--okbg:#f7e6cc;--hg:linear-gradient(135deg,#9a5d10,#c98b2e 60%,#e8b560);--hs:rgba(154,93,16,.35)}
+body[data-m=p3]{--ok:#1f8a8a;--okbg:#d3efef;--hg:linear-gradient(135deg,#176b6b,#2a9d9d 60%,#5cc4c4);--hs:rgba(23,107,107,.35)}
+body[data-m=p4]{--ok:#b0446f;--okbg:#f6dce6;--hg:linear-gradient(135deg,#8e3157,#c05582 60%,#e589ab);--hs:rgba(142,49,87,.35)}
+@media (prefers-color-scheme:dark){body[data-m=p1]{--ok:#b293e0;--okbg:#352a4a}body[data-m=p2]{--ok:#e0a954;--okbg:#4a3718}body[data-m=p3]{--ok:#5cc4c4;--okbg:#17403f}body[data-m=p4]{--ok:#e589ab;--okbg:#4a2335}}
+:root[data-theme=dark] body[data-m=p1]{--ok:#b293e0;--okbg:#352a4a}
+:root[data-theme=light] body[data-m=p1]{--ok:#7a58a8;--okbg:#e8def5}
+:root[data-theme=dark] body[data-m=p2]{--ok:#e0a954;--okbg:#4a3718}
+:root[data-theme=light] body[data-m=p2]{--ok:#b8741a;--okbg:#f7e6cc}
+:root[data-theme=dark] body[data-m=p3]{--ok:#5cc4c4;--okbg:#17403f}
+:root[data-theme=light] body[data-m=p3]{--ok:#1f8a8a;--okbg:#d3efef}
+:root[data-theme=dark] body[data-m=p4]{--ok:#e589ab;--okbg:#4a2335}
+:root[data-theme=light] body[data-m=p4]{--ok:#b0446f;--okbg:#f6dce6}
+.mswitch{overflow-x:auto;gap:6px;scrollbar-width:none}
+.mswitch::-webkit-scrollbar{display:none}
+.mswitch button{flex:0 0 auto;padding:8px 16px;border-radius:999px;white-space:nowrap}
+.mswitch button.on{background:var(--okbg)}
+details.card>summary{font-size:17px;font-weight:bold;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:"›";transform:rotate(90deg);transition:transform .25s;color:var(--mute)}
+details.card[open]>summary::after{transform:rotate(-90deg)}
+details.card[open]>summary{margin-bottom:10px}
+#hw{display:grid;grid-template-columns:1fr 1fr;column-gap:12px}
+#hw>.hero{grid-column:span 2}
+.wcell{grid-column:span 2}
+.wcell.s{grid-column:span 1}
+.grip{cursor:grab;padding:4px 8px;touch-action:none;user-select:none;color:var(--mute)}
+.yr{display:flex;align-items:center;gap:6px;margin:2px 0}
+.yr>span{width:34px;font-size:11px;color:var(--mute)}
+.yc{display:grid;grid-template-columns:repeat(31,1fr);gap:2px;flex:1}
+.ycell{aspect-ratio:1;padding:0;width:auto;min-width:0;border-radius:2px;background:var(--line);border:0}
+.ycell.ok{background:var(--ok)}
+.ycell.bad{background:var(--bad)}
+.ycell.off{opacity:.2}
+#undoT{bottom:calc(122px + env(safe-area-inset-bottom,0px)*.45)}
+#undoT.show{pointer-events:auto}
+.mh{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.mh span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;background:var(--line);font-size:12px}
+.mh .ok{background:var(--okbg);border:1px solid var(--ok)}
+.mh .bad{background:var(--badbg);border:1px solid var(--bad)}
+.mh .fut{opacity:.3}
+body.hc{--mute:var(--ink);--line:var(--ink)}
+body.hc .card{border-width:2px}
+body.rm *,body.rm *::before,body.rm *::after{animation:none!important;transition:none!important}
 </style>
 </head>
 <body>
 <div class="bg"><i></i><i></i></div>
 <div class="toast" id="toast" role="status"></div>
+<div class="toast" id="undoT"><span>Mentve</span> <button class="mini" id="undoB">Visszavonás</button></div>
 <main id="app"><div class="wrap">
 <div class="brand">
   <svg viewBox="0 0 512 512" width="34" height="34" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f5a45"/><stop offset="1" stop-color="#5fbf97"/></linearGradient><linearGradient id="ls" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a5c"/><stop offset="1" stop-color="#ef5a3c"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#lg)"/><path d="M158 262H354L338 398Q336 416 318 416H194Q176 416 174 398Z" fill="#fff" opacity=".4"/><path d="M146 140H366L340 398Q338 420 316 420H196Q174 420 172 398Z" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-width="22" stroke-linejoin="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="#1f5a45" stroke-width="58" stroke-linecap="round"/><line x1="104" y1="104" x2="408" y2="408" stroke="url(#ls)" stroke-width="36" stroke-linecap="round"/></svg>
   <b>NoDrink</b>
 </div>
-<div class="mswitch" id="msw"><span class="mi" id="mi"></span><button data-m="alc" class="on">Alkohol</button><button data-m="ene">Energiaital</button><button data-m="cus">Saját</button></div>
+<div class="mswitch" id="msw"></div>
 <h1 id="h1">Napok ivás nélkül</h1>
 
 <!-- NAPLÓ -->
@@ -265,12 +310,14 @@ body.lite .ind{width:calc((100% - 10px)/3)}
       <button id="next" aria-label="Következő hónap">›</button>
     </div>
     <div class="row" style="margin:0 0 8px"><button id="multiB">Több nap kijelölése</button><button id="selClr" class="hidden">Kijelölés törlése</button></div>
+    <div class="row hidden" id="qsel" style="margin:0 0 8px;flex-wrap:wrap"><button class="mini" data-q="3">Elmúlt 3 nap</button><button class="mini" data-q="wk">Ez a hét</button><button class="mini" data-q="we">Hétvégék</button><button class="mini" data-q="mo">Egész hónap</button></div>
     <div class="cal" id="cal"></div>
     <p class="leg">Zöld: nem ittál · Piros: ittál · Szaggatott: még nincs kitöltve. Szerkeszteni az aktuális hónap első napjától lehet.</p>
     <div id="panel" class="hidden">
       <h2 id="ptitle"></h2>
       <div class="seg"><button id="bn">Nem ittam</button><button id="bi">Ittam</button></div>
       <div id="dfields" class="hidden">
+        <div id="chips2" style="margin-bottom:6px"></div>
         <label for="lib">Ital a tárból</label>
         <select id="lib"></select>
         <div class="two" style="margin-top:8px"><input id="lqty" type="text" inputmode="decimal" value="1" aria-label="Darab" style="flex:0 0 64px"><select id="lpay" aria-label="Ki fizette"><option value="own">Én fizetem</option><option value="free">Meghívtak (ingyen)</option></select><button id="ladd" style="flex:0 0 auto">Hozzáad</button></div>
@@ -284,6 +331,9 @@ body.lite .ind{width:calc((100% - 10px)/3)}
             <select id="unit"><option value="">Válassz…</option><option value="shot">Shot (4 cl)</option><option value="pohar">Pohár (500 ml)</option></select></div>
           <div><label for="qty">Mennyi? (darab)</label><input id="qty" type="text" inputmode="decimal" placeholder="pl. 3 vagy 200" autocomplete="off"></div>
         </div>
+        <div class="two"><div><label for="ctp">Napszak</label><select id="ctp"><option value="">–</option><option>Reggel</option><option>Délután</option><option>Este</option><option>Éjszaka</option></select></div><div><label for="cpl">Hely</label><select id="cpl"><option value="">–</option><option>Otthon</option><option>Munkahely</option><option>Bár / étterem</option><option>Barátoknál</option><option>Utazás</option><option>Egyéb</option></select></div></div>
+        <label for="cco">Társaság</label><select id="cco"><option value="">–</option><option>Egyedül</option><option>Párral</option><option>Barátokkal</option><option>Családdal</option><option>Kollégákkal</option></select>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" id="joker" style="width:auto"> Joker nap (havonta egyszer): a széria nem nullázódik</label>
         <label for="dcost">Mennyibe került? (Ft)</label>
         <input id="dcost" type="text" inputmode="numeric" placeholder="pl. 1800" autocomplete="off">
         <label for="why">Miért?</label>
@@ -302,6 +352,10 @@ body.lite .ind{width:calc((100% - 10px)/3)}
       <p class="mute" id="auto" style="margin:8px 0 0">Automatikus mentés: minden változtatás azonnal mentődik.</p>
     </div>
   </div>
+  <div class="card" id="chkc"></div>
+  <div class="card" id="chalc"></div>
+  <div class="card"><h2>Év áttekintése</h2><div class="nav"><button id="oyp" aria-label="Előző év">‹</button><b id="oyl"></b><button id="oyn" aria-label="Következő év">›</button></div><div id="oyh"></div><p class="leg">Zöld: nem volt · Piros: volt · Szürke: nincs adat. Koppints egy napra.</p></div>
+  <div class="card"><h2>Napló keresése</h2><input id="lq" placeholder="Keresés (tétel, ok, megjegyzés…)" autocomplete="off"><select id="lf" style="margin-top:8px"><option value="">Minden nap</option><option value="i">Csak amikor volt</option><option value="n">Csak amikor nem volt</option></select><div id="lres" style="margin-top:8px"></div></div>
   <div class="card" id="planc">
     <h2>Alkalmak (előre tervezés)</h2>
     <p class="mute">Vidd fel a közelgő eseményeket (buli, esküvő), és add meg a tervedet. Az esemény előtt emlékeztet, utána kiértékeli.</p>
@@ -331,13 +385,23 @@ body.lite .ind{width:calc((100% - 10px)/3)}
 <!-- PROFIL -->
 <section id="p-prof" class="hidden">
   <div class="card hidden" id="bk"></div>
-  <div class="card">
-    <h2>Profil</h2>
+  <div class="card" id="psum2"></div>
+  <details class="card" open>
+    <summary>Fiók és megjelenés</summary>
     <div class="row" style="margin:0 0 6px"><button id="statsB">Részletes statisztika</button><button id="liteB">Egyszerű nézet</button></div>
     <label for="name">Neved</label>
     <input id="name" placeholder="Opcionális" autocomplete="off">
-    <label for="cn">A harmadik követés neve</label>
-    <input id="cn" placeholder="pl. Kávé, Cigi, Édesség" autocomplete="off">
+    <label for="lang">Nyelv / Language</label>
+    <select id="lang"><option value="hu">Magyar</option><option value="en">English</option></select>
+    <label for="fsz">Betűméret</label>
+    <select id="fsz"><option value="1">Normál</option><option value="1.15">Nagyobb</option><option value="1.3">Legnagyobb</option></select>
+    <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="hc" style="width:auto"> Nagy kontraszt</label>
+    <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="rmo" style="width:auto"> Kevesebb animáció</label>
+    <label for="epw">Adatok titkosítása (jelszó)</label>
+    <div class="two"><input id="epw" type="password" placeholder="Új jelszó (min. 6 karakter)" autocomplete="new-password"><button id="eOn">Bekapcsolás</button></div>
+    <button id="eOff" class="danger hidden" style="margin-top:8px">Titkosítás kikapcsolása</button>
+    <p class="mute" id="est"></p>
+    <p class="mute">Elfelejtett jelszóval az adatok nem állíthatók vissza, ezért készíts fájlmentést is.</p>
     <label for="theme">Téma</label>
     <select id="theme"><option value="auto">Automatikus</option><option value="light">Világos</option><option value="dark">Sötét</option></select>
     <label for="pin">PIN-kód (4 számjegy)</label>
@@ -347,9 +411,18 @@ body.lite .ind{width:calc((100% - 10px)/3)}
     <div class="two"><input type="time" id="icsT" value="20:00"><button id="icsB">Letöltés (.ics)</button></div>
     <p class="mute" id="icsn" style="margin-top:6px">A letöltött fájlt a telefonod naptára megnyitja, és napi ismétlődő értesítést állít be.</p>
     <p class="mute">A PIN csak a képernyőt zárja le ebben a böngészőben, az adatokat nem titkosítja.</p>
-  </div>
-  <div class="card">
-    <h2 id="ptrk"></h2>
+  </details>
+  <details class="card" id="trkc">
+    <summary>Követések</summary>
+    <p class="mute">Az Alkohol és az Energiaital alap követés. Legfeljebb 10 továbbit adhatsz hozzá.</p>
+    <div id="trklist"></div>
+    <label for="kind">Új követés</label>
+    <select id="kind"></select>
+    <input id="kname" class="hidden" placeholder="A követés neve" style="margin-top:8px" autocomplete="off">
+    <button class="main" id="kadd" style="margin-top:10px">Hozzáadás</button>
+  </details>
+  <details class="card">
+    <summary id="ptrk"></summary>
     <label for="goalSel">Célom (ivásmentes napok egymás után)</label>
     <select id="goalSel"><option value="0">Nincs cél</option><option value="7">7 nap</option><option value="14">14 nap</option><option value="30">30 nap</option><option value="60">60 nap</option><option value="90">90 nap</option><option value="180">180 nap</option><option value="365">365 nap</option></select>
     <label for="cost">Átlagos napi költésem, amikor ittam (Ft)</label>
@@ -365,30 +438,45 @@ body.lite .ind{width:calc((100% - 10px)/3)}
     <label for="oldQ">Régi szokásom: adag hetente</label><input id="oldQ" inputmode="numeric" placeholder="pl. 14" autocomplete="off">
     <label for="oldC">Régi szokásom: költés hetente (Ft)</label><input id="oldC" inputmode="numeric" placeholder="pl. 9000" autocomplete="off">
     <label for="plans">Ha–akkor tervek (soronként egy, pl. „Ha stresszes vagyok, akkor sétálok”)</label><textarea id="plans" rows="4"></textarea>
+    <label for="tcol">Szín</label>
+    <select id="tcol"><option value="">Automatikus</option><option value="alc">Zöld</option><option value="ene">Kék</option><option value="p1">Lila</option><option value="p2">Borostyán</option><option value="p3">Zöldeskék</option><option value="p4">Rózsaszín</option></select>
+    <label for="cnn">Saját számláló (pl. „Új munka kezdete”)</label>
+    <div class="two"><input id="cnn" placeholder="Felirat" autocomplete="off"><input id="cnd" type="date"></div>
+    <button class="main" id="cnadd" style="margin-top:10px">Számláló hozzáadása</button>
+    <div id="cnl"></div>
     <p class="mute" id="psum" style="margin-top:12px"></p>
-  </div>
-  <div class="card">
-    <h2 id="libh">Italok</h2>
+  </details>
+  <details class="card">
+    <summary id="libh">Italok</summary>
     <p class="mute">Vidd fel az italaidat egyszer, a napi rögzítésnél pedig csak kiválasztod őket. Ezekből készül a részletes statisztika.</p>
     <label for="ln">Név</label><input id="ln" placeholder="pl. Soproni 0,5 l" autocomplete="off">
     <label for="lt">Típus</label><select id="lt"></select>
     <div class="two"><div><label for="lm">Mennyiség (ml)</label><input id="lm" inputmode="numeric" placeholder="pl. 500" autocomplete="off"></div><div><label for="lp">Ár (Ft)</label><input id="lp" inputmode="numeric" placeholder="pl. 450" autocomplete="off"></div></div>
     <label for="la" id="lal">Alkoholtartalom (%)</label><input id="la" inputmode="decimal" placeholder="pl. 4,5" autocomplete="off">
     <div class="row"><button class="main" id="lsave">Hozzáadás</button><button id="lcancel" class="hidden">Mégse</button></div>
-  </div>
-  <div class="card"><h2>Az italaid</h2><div id="llist"></div></div>
-  <div class="card" id="snapc">
-    <h2>Biztonsági mentések</h2>
+  </details>
+  <details class="card"><summary>Saját mértékegységek</summary><p class="mute">pl. „Korsó” 500 ml. A felvitelnél megjelenik a mértékegységek között.</p><div class="two"><input id="un" placeholder="Név (pl. Korsó)" autocomplete="off"><input id="um" inputmode="numeric" placeholder="ml" autocomplete="off"></div><button class="main" id="uadd" style="margin-top:10px">Hozzáadás</button><div id="ulist"></div></details>
+  <details class="card" open><summary>Az italaid</summary><div id="llist"></div></details>
+  <details class="card" id="snapc">
+    <summary>Biztonsági mentések</summary>
     <p class="mute">Az app naponta egyszer automatikusan másolatot készít az adataidról a böngészőben (az utolsó 7-et tartja meg). Ez nem helyettesíti a fájlba mentést.</p>
     <div id="snaps"></div>
-  </div>
-  <div class="card">
-    <h2>Adatok</h2>
+  </details>
+  <details class="card">
+    <summary>Adatok és átvitel</summary>
     <p class="mute">Minden adat csak ebben a böngészőben tárolódik, nincs felhős mentés. Ments rendszeresen fájlba, hogy át tudd vinni másik eszközre.</p>
     <div class="row"><button id="export">Mentés fájlba</button><button id="import">Betöltés fájlból</button></div>
     <div class="row"><button class="danger" id="wipe">Ennek a követésnek a törlése</button></div>
     <input type="file" id="file" accept="application/json" class="hidden">
-  </div>
+    <h2 style="margin-top:16px;font-size:15px">Riport</h2>
+    <select id="rper"><option value="m0">Ez a hónap</option><option value="m1">Előző hónap</option><option value="d90">Utolsó 90 nap</option><option value="all">Teljes időszak</option></select>
+    <div class="row"><button id="rPdf">Riport (PDF)</button><button id="rCsv">Riport (CSV)</button></div>
+    <p class="mute">A PDF-et a megnyíló nyomtatási ablakból mentheted („Mentés PDF-ként” vagy megosztás).</p>
+    <h2 style="margin-top:16px;font-size:15px">Átvitel másik telefonra</h2>
+    <p class="mute">Az adatok mérete miatt QR-kód helyett szöveges kódot használ az app: elküldheted üzenetben, és a másik telefonon beillesztheted.</p>
+    <textarea id="xfer" rows="3" placeholder="Itt jelenik meg a kód / ide illeszd be a kódot"></textarea>
+    <div class="row"><button id="xMk">Kód készítése</button><button id="xCopy">Másolás</button><button id="xIn">Betöltés</button></div>
+  </details>
 </section>
 
 </div></main>
@@ -421,20 +509,45 @@ body.lite .ind{width:calc((100% - 10px)/3)}
   <div id="plans2" style="text-align:left"></div>
   <div class="row"><button class="main" id="sosDone">Átvészeltem</button></div>
 </div></div>
+<div class="ov hidden" id="dec" style="z-index:40;background:var(--bg)"><div class="card" style="text-align:center"><h2>NoDrink</h2><p class="mute">Add meg a jelszót az adatok feloldásához</p><input id="dpw" type="password" autocomplete="current-password" placeholder="Jelszó"><p class="mute" id="derr"></p><button class="main" id="dgo" style="width:100%">Feloldás</button></div></div>
+<div class="ov hidden" id="onb"><div class="card" id="onbc"></div></div>
 <script>
 const MN=["január","február","március","április","május","június","július","augusztus","szeptember","október","november","december"];
 const WD=["Hé","Ke","Sze","Cs","Pé","Szo","Va"];
 const WDL=["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"];
 const CFG={
  alc:{label:"Alkohol",units:{shot:["Shot (4 cl)",40],pohar:["Pohár (500 ml)",500]},reasons:["Stressz","Társaság / buli","Unalom","Ünneplés","Magány","Rossz kedv","Fáradtság","Munka utáni lazítás","Veszekedés / konfliktus","Szokás"],drinks:["Sör","Bor","Pálinka","Vodka","Whisky","Fröccs","Rövidital / koktél"],q:"Ugye nem ittál ma?",title:"napok ivás nélkül",types:["Sör","Bor","Pezsgő","Shot","Szeszes ital","Koktél / likőr","Egyéb"],alts:["Rövid séta","Pohár víz vagy tea","Hívj fel valakit","Zuhany","10 fekvőtámasz"],last:"ivás",facts:[[1,"Az alkohol kiürülőben van a szervezetedből, és sokaknál javul a hidratáltság."],[3,"Sokaknál kezd javulni az alvás és a koncentráció."],[7,"Egy hét után sokan több energiát és jobb hangulatot tapasztalnak."],[14,"Két hét: a bőr gyakran frissebb, a reggelek könnyebbek."],[30,"Egy hónap: sokaknál javul a vérnyomás, az alvásminőség és a máj állapota."],[90,"Három hónap: a hangulat és a koncentráció tartósabban javulhat."]]},
- ene:{label:"Energiaital",units:{kicsi:["Kis doboz (250 ml)",250],nagy:["Nagy doboz (500 ml)",500]},reasons:["Fáradtság","Tanulás / vizsga","Munka","Vezetés","Edzés előtt","Kávé helyett","Éjszakai műszak","Unalom","Stressz","Szokás"],drinks:["Red Bull","Monster","Burn","Hell","Rockstar"],q:"Ugye nem ittál ma energiaitalt?",title:"napok energiaital nélkül",types:["Klasszikus","Cukormentes","Egyéb"],alts:["Pohár víz","10 perc séta","Rövid szunyókálás","Gyümölcs","Tea kávé helyett"],last:"energiaital",facts:[[1,"Az elvonási tünetek (fejfájás, fáradtság) 1–2 napon belül jelentkezhetnek."],[3,"A tünetek sokaknál néhány nap alatt enyhülnek, jellemzően 2–9 nap alatt múlnak."],[7,"Az alvás és a nyugodtabb szívritmus sokaknál javul."],[30,"Egy hónap: stabilabb energiaszint, kevesebb cukorbevitel."]]},
- cus:{units:{adag:["Adag",0]},reasons:["Stressz","Unalom","Szokás","Társaság","Fáradtság","Jutalom"],drinks:[],types:["Általános"],alts:["Pohár víz","Rövid séta","Mély lélegzés"],last:"alkalom",facts:[[1,"Az első nap után már bizonyítottad, hogy képes vagy rá."],[7,"Egy hét: a szokás ereje gyengülni kezd."],[30,"Egy hónap: az új rutin kezd megszilárdulni."]]}
+ ene:{label:"Energiaital",units:{kicsi:["Kis doboz (250 ml)",250],nagy:["Nagy doboz (500 ml)",500]},reasons:["Fáradtság","Tanulás / vizsga","Munka","Vezetés","Edzés előtt","Kávé helyett","Éjszakai műszak","Unalom","Stressz","Szokás"],drinks:["Red Bull","Monster","Burn","Hell","Rockstar"],q:"Ugye nem ittál ma energiaitalt?",title:"napok energiaital nélkül",types:["Klasszikus","Cukormentes","Egyéb"],alts:["Pohár víz","10 perc séta","Rövid szunyókálás","Gyümölcs","Tea kávé helyett"],last:"energiaital",facts:[[1,"Az elvonási tünetek (fejfájás, fáradtság) 1–2 napon belül jelentkezhetnek."],[3,"A tünetek sokaknál néhány nap alatt enyhülnek, jellemzően 2–9 nap alatt múlnak."],[7,"Az alvás és a nyugodtabb szívritmus sokaknál javul."],[30,"Egy hónap: stabilabb energiaszint, kevesebb cukorbevitel."]]}
 };
-Object.defineProperty(CFG.cus,"label",{get:()=>store.custName||"Saját"});
-Object.defineProperty(CFG.cus,"title",{get:()=>"napok "+(store.custName||"saját követés").toLowerCase()+" nélkül"});
-Object.defineProperty(CFG.cus,"q",{get:()=>"Ugye ma nem volt: "+(store.custName||"saját követés").toLowerCase()+"?"});
+Object.assign(CFG.alc,{act:"ivás",useN:"ivós",vp:"ittál",v1:"ittam",pr:"iszom"});
+Object.assign(CFG.ene,{act:"energiaital",useN:"energiaitalos",vp:"ittál energiaitalt",v1:"ittam energiaitalt",pr:"iszom energiaitalt"});
+const KEN={alc:["Alcohol","drink","drank","drinking"],ene:["Energy drinks","drink energy drinks","drank an energy drink","energy drinks"],cigi:["Cigarettes","smoke","smoked","smoking"],vape:["Vape","vape","vaped","vaping"],nasi:["Snacks / sweets","snack","snacked","snacking"],kave:["Coffee","have coffee","had coffee","coffee"],udito:["Sugary drinks","drink sugary drinks","drank sugary drinks","sugary drinks"],gyors:["Fast food","eat fast food","ate fast food","fast food"],szeren:["Gambling","gamble","gambled","gambling"],social:["Social media","use social media","used social media","social media"],game:["Video games","play video games","played video games","video games"],vasar:["Impulse buying","shop impulsively","shopped impulsively","impulse buying"]};
+const kenOf=k=>KEN[k]||KEN[(store.t[k]||{}).kind];
+const E=()=>store.lang==="en";
+const cap=x=>x.charAt(0).toUpperCase()+x.slice(1);
+const GENR=["Stressz","Unalom","Szokás","Társaság","Fáradtság","Jutalom"],GENA=["Pohár víz","Rövid séta","Mély lélegzés"];
+const GENF=[[1,"Az első nap után már bizonyítottad, hogy képes vagy rá."],[7,"Egy hét: a szokás ereje gyengülni kezd."],[30,"Egy hónap: az új rutin kezd megszilárdulni."]];
+const KINDS={
+ cigi:{name:"Cigi",act:"cigi",useN:"cigis",vp:"szívtál",v1:"szívtam",pr:"szívok",unit:"Szál",items:["Cigaretta","Szivar"],facts:[[1,"Az első nap után a szén-monoxid szint a vérben csökkenni kezd."],[3,"A légzés sokaknál könnyebbé válik, közben a nikotinéhség tetőzhet."],[7,"Egy hét: az íz- és szaglás sokaknál érezhetően javul."],[30,"Egy hónap: a köhögés és a fáradékonyság sokaknál enyhül."],[90,"Három hónap: a tüdőfunkció javulhat."]]},
+ vape:{name:"Vape / e-cigi",act:"vape",useN:"vapes",vp:"vapeoltál",v1:"vapeoltam",pr:"vapeolok",unit:"Alkalom"},
+ nasi:{name:"Nasi / édesség",act:"nasi",useN:"nasis",vp:"nasiztál",v1:"nasiztam",pr:"nasizok",unit:"Adag",items:["Csokoládé","Chips","Süti"]},
+ kave:{name:"Kávé",act:"kávé",useN:"kávés",vp:"ittál kávét",v1:"ittam kávét",pr:"iszom kávét",unit:"Csésze",items:["Eszpresszó","Cappuccino","Tejeskávé"],facts:[[1,"A koffein-elvonási tünetek (fejfájás, fáradtság) 1–2 napon belül jelentkezhetnek."],[3,"A tünetek sokaknál néhány nap alatt enyhülnek."],[7,"Az alvás és az energiaszint sokaknál stabilabbá válik."],[30,"Egy hónap: nyugodtabb energiaszint koffein nélkül."]]},
+ udito:{name:"Cukros üdítő",act:"cukros üdítő",useN:"üdítős",vp:"ittál cukros üdítőt",v1:"ittam cukros üdítőt",pr:"iszom cukros üdítőt",unit:"Adag"},
+ gyors:{name:"Gyorsétel",act:"gyorsétel",useN:"gyorskajás",vp:"ettél gyorskaját",v1:"ettem gyorskaját",pr:"eszem gyorskaját",unit:"Adag"},
+ szeren:{name:"Szerencsejáték",act:"szerencsejáték",useN:"szerencsejátékos",vp:"játszottál szerencsejátékot",v1:"játszottam szerencsejátékot",pr:"játszom szerencsejátékot",unit:"Alkalom"},
+ social:{name:"Közösségi média",act:"közösségi média",useN:"közösségi médiás",vp:"görgetted a közösségi médiát",v1:"görgettem a közösségi médiát",pr:"görgetem a közösségi médiát",unit:"Alkalom"},
+ game:{name:"Videójáték",act:"videójáték",useN:"játékos",vp:"játszottál videójátékot",v1:"játszottam videójátékot",pr:"játszom videójátékot",unit:"Alkalom"},
+ vasar:{name:"Impulzusvásárlás",act:"impulzusvásárlás",useN:"vásárlós",vp:"vásároltál impulzusból",v1:"vásároltam impulzusból",pr:"vásárolok impulzusból",unit:"Vásárlás"},
+ own:{name:"Saját"}
+};
+function xCfg(T){
+  const k=KINDS[T.kind]||KINDS.own,nm=T.name||k.name,own=!k.vp,a=k.act||nm.toLowerCase();
+  return{label:nm,units:{adag:[k.unit||"Adag",0]},reasons:GENR,drinks:k.items||[],types:["Általános"],alts:GENA,last:"alkalom",facts:k.facts||GENF,act:a,useN:k.useN||"érintett",vp:own?null:k.vp,v1:own?null:k.v1,pr:own?null:k.pr,q:own?"Ugye ma nem volt: "+nm.toLowerCase()+"?":"Ugye ma nem "+k.vp+"?",title:"napok "+a+" nélkül"};
+}
+const W={no:c=>c.enk?"I didn't "+c.enk[1]:(c.v1?"Nem "+c.v1:"Nem volt"),yes:c=>c.enk?"I "+c.enk[2]:(c.v1?cap(c.v1):"Volt"),today:c=>c.enk?"You "+c.enk[2]+" today. Tomorrow is a new day.":(c.vp?"Ma "+c.vp+". Holnap új nap, új széria.":"Ma volt. Holnap új nap, új széria."),pr:c=>c.enk?"I won't "+c.enk[1]:(c.pr?"Nem "+c.pr:"Nem lesz")};
 let REASONS=CFG.alc.reasons;
-const C=()=>CFG[store.mode];
+const C=()=>{const c=CFG[store.mode]||xCfg(store.t[store.mode]);if(!E())return c;const n=kenOf(store.mode);return n?Object.assign({},c,{label:n[0],enk:n,q:"You didn't "+n[1]+" today, right?",title:"days without "+n[3]}):c};
+const isX=()=>!CFG[store.mode];
 const MS=[1,3,7,14,30,60,90,180,365];
 const ML={shot:40,pohar:500,kicsi:250,nagy:500,adag:0};
 const $=id=>document.getElementById(id);
@@ -447,7 +560,7 @@ const diff=(a,b)=>Math.round((parse(a)-parse(b))/864e5);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const monthStart=()=>todayS().slice(0,8)+"01";
 const fl=v=>(Math.round(v*10)/10).toString().replace(".",",");
-const REDUCED=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let REDUCED=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let toastT,saveT,flashDate=null;
 function toast(msg){const t=$("toast");t.innerHTML="<b>✓</b>"+esc(msg);t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200)}
 function countTo(el,n){
@@ -458,32 +571,39 @@ function countTo(el,n){
   const step=now=>{const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(n-from)*e);if(k<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
 }
-const mlOf=e=>e&&e.items&&e.items.length?e.items.reduce((a,i)=>a+i.ml*i.q,0):(e&&e.unit&&e.qty?e.qty*ML[e.unit]:0);
+const mlOf=e=>e&&e.items&&e.items.length?e.items.reduce((a,i)=>a+i.ml*i.q,0):(e&&e.unit&&e.qty?e.qty*unitMl(e.unit):0);
 
+let ckey=null,csalt=null,encP=Promise.resolve(),LOCKED=false,ENC=null;
 const KEY="nodrink-v3";
 const mkT=()=>({start:todayS(),days:{},profile:{goal:0,cost:0}});
-let store={v:3,mode:"alc",name:"",theme:"auto",pin:"",t:{alc:mkT(),ene:mkT(),cus:mkT()},custName:""},data;
+let store={v:3,mode:"alc",name:"",theme:"auto",pin:"",t:{alc:mkT(),ene:mkT()},custName:"",tpls:[],xn:0},data;
 try{
   const g=localStorage.getItem(KEY),o=localStorage.getItem("napok-v2");
-  if(g)store=JSON.parse(g);
+  if(g){const j=JSON.parse(g);if(j&&j.enc){ENC=j;LOCKED=true}else store=j}
   else if(o){const d=JSON.parse(o);store.name=(d.profile&&d.profile.name)||"";d.profile={goal:(d.profile&&d.profile.goal)||0,cost:0};store.t.alc=d}
 }catch(e){}
 function norm(){
-  store.t=Object.assign({alc:mkT(),ene:mkT(),cus:mkT()},store.t);
-  for(const k in store.t){const T=store.t[k];T.profile=Object.assign({goal:0,cost:0,limD:0,limQ:0,alts:CFG[k].alts.slice()},T.profile||{});T.lib=T.lib||[];T.events=T.events||[];T.home=T.home||["streak"]}
+  store.t=Object.assign({alc:mkT(),ene:mkT()},store.t);
+  if(store.t.cus){const c=store.t.cus;if(Object.keys(c.days).length||store.custName){c.kind="own";c.name=store.custName||"Saját";store.t.x1=c;store.xn=Math.max(store.xn||0,1)}delete store.t.cus;if(store.mode==="cus")store.mode=store.t.x1?"x1":"alc"}
+  store.tpls=store.tpls||[];store.xn=store.xn||0;
+  for(const k in store.t){const T=store.t[k];T.profile=Object.assign({goal:0,cost:0,limD:0,limQ:0,alts:(CFG[k]||xCfg(T)).alts.slice()},T.profile||{});T.lib=T.lib||[];T.events=T.events||[];T.home=T.home||["streak"];T.hsize=T.hsize||{};T.chk=T.chk||{};T.units=T.units||[];T.counters=T.counters||[];if(!CFG[k]&&!T.kind)T.kind="own"}
   store.mode=store.t[store.mode]?store.mode:"alc";data=store.t[store.mode];
 }
 norm();
-const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}};
+function persist(){
+  if(LOCKED)return;
+  if(ckey){encP=encP.then(async()=>{try{localStorage.setItem(KEY,JSON.stringify(await encStr(JSON.stringify(store))))}catch(e){}});return}
+  try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}
+}
 persist();snapNow();
 function soberDays(){let n=0;for(let d=firstDay();d<=todayS();d=addD(d,1))if(!(data.days[d]&&data.days[d].s==="i"))n++;return n}
 const firstDay=()=>{const ks=Object.keys(data.days).sort();return ks.length&&ks[0]<data.start?ks[0]:data.start};
-const lastDrink=()=>{const ks=Object.keys(data.days).filter(k=>data.days[k].s==="i").sort();return ks.length?ks[ks.length-1]:null};
+const lastDrink=()=>{const ks=Object.keys(data.days).filter(k=>data.days[k].s==="i"&&!data.days[k].joker).sort();return ks.length?ks[ks.length-1]:null};
 function streak(){const ld=lastDrink(),t=todayS();return ld?diff(t,ld):diff(t,data.start)+1}
 function streaks(){
   const out=[];let cur=0;
   for(let d=firstDay();d<=todayS();d=addD(d,1)){
-    if(data.days[d]&&data.days[d].s==="i"){if(cur)out.push(cur);cur=0}else cur++;
+    if(data.days[d]&&data.days[d].s==="i"&&!data.days[d].joker){if(cur)out.push(cur);cur=0}else cur++;
   }
   if(cur)out.push(cur);
   return out;
@@ -492,7 +612,7 @@ function streaks(){
 /* Űrlap mezők */
 function fillForm(){
   const c=C();REASONS=c.reasons;
-  $("unit").innerHTML='<option value="">Válassz…</option>'+Object.entries(c.units).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join("");
+  $("unit").innerHTML='<option value="">Válassz…</option>'+Object.entries(c.units).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).concat(data.units.map(u=>`<option value="${u.id}">${esc(u.n)} (${u.ml} ml)</option>`)).join("");
   $("why").innerHTML='<option value="">Válassz okot…</option>'+REASONS.map(r=>`<option>${r}</option>`).join("")+'<option value="__o">Egyéb – saját beírása</option>';
   $("whatl").innerHTML=c.drinks.map(d=>`<option value="${d}">`).join("");
 }
@@ -540,9 +660,9 @@ function openPanel(d){
   $("what").value=e.what||"";
   $("unit").value=e.unit||"";
   $("qty").value=e.qty?String(e.qty).replace(".",","):"";
-  $("note").value=e.note||"";$("crave").value=typeof e.crave==="number"?String(e.crave):"";curItems=(e.items||[]).map(i=>Object.assign({},i));$("dcost").value=e.cost&&!(curItems.length&&e.cost===itemSum(curItems))?String(e.cost):"";$("mood").value=typeof e.mood==="number"?String(e.mood):"";$("refl").value=e.refl||"";renderItems();
+  $("note").value=e.note||"";$("crave").value=typeof e.crave==="number"?String(e.crave):"";curItems=(e.items||[]).map(i=>Object.assign({},i));$("dcost").value=e.cost&&!(curItems.length&&e.cost===itemSum(curItems))?String(e.cost):"";$("mood").value=typeof e.mood==="number"?String(e.mood):"";$("refl").value=e.refl||"";$("ctp").value=e.tp||"";$("cpl").value=e.pl||"";$("cco").value=e.co||"";$("joker").checked=!!e.joker;renderItems();
   setWhy(e.why||"");
-  ["what","unit","qty","why","whyo","note","crave","dcost","lib","lqty","lpay","ladd","mood","refl","bn","bi","clear"].forEach(k=>$(k).disabled=!ed);
+  ["what","unit","qty","why","whyo","note","crave","dcost","lib","lqty","lpay","ladd","mood","refl","ctp","cpl","cco","joker","bn","bi","clear"].forEach(k=>$(k).disabled=!ed);
   if(!ed)$("ptitle").textContent+=" – csak megtekintés";
   if(e.s==="i"&&!e.unit&&e.amount)$("ptitle").textContent+=" · korábbi mennyiség: "+e.amount;
   syncSeg();renderCal();
@@ -563,7 +683,7 @@ $("cal").onclick=e=>{
 };
 $("multiB").onclick=()=>{
   multi=!multi;$("multiB").classList.toggle("on",multi);$("multiB").textContent=multi?"Több nap: BE":"Több nap kijelölése";
-  $("selClr").classList.toggle("hidden",!multi);
+  $("selClr").classList.toggle("hidden",!multi);$("qsel").classList.toggle("hidden",!multi);
   if(!multi&&selDays.length>1){selDays=selDays.slice(-1);openPanel(selDays[0])}
 };
 $("selClr").onclick=()=>{selDays=[];sel=null;$("panel").classList.add("hidden");renderCal()};
@@ -584,6 +704,8 @@ function collect(){
       if(q>0&&q<=1000)e.qty=q;
     }
     const w=getWhy();if(w)e.why=w;
+    if($("ctp").value)e.tp=$("ctp").value;if($("cpl").value)e.pl=$("cpl").value;if($("cco").value)e.co=$("cco").value;
+    if($("joker").checked)e.joker=true;
     const cst=parseInt($("dcost").value.replace(/\D/g,""),10);
     if(cst>0)e.cost=cst;else if(ic)e.cost=ic;
   }
@@ -599,26 +721,28 @@ function autoSave(now){
   const run=()=>{
     if(!selDays.length||!selDays.every(editable))return;
     const e=collect(),multiSel=selDays.length>1;let n=0;
+    if(e.joker){const mk=selDays[0].slice(0,7),other=Object.keys(data.days).some(d=>d!==selDays[0]&&d.slice(0,7)===mk&&data.days[d].joker);if(other||multiSel){delete e.joker;$("joker").checked=false;toast("Joker napot havonta csak egyszer, egy napra lehet használni")}}
+    pushUndo();
     selDays.forEach(d=>{
       const base=data.days[d]||{};
       if(!multiSel){if(!e.s)return;data.days[d]=e}
       else{
         if(!e.s&&!base.s)return;
         const m=Object.assign({},base,e);
-        if(m.s==="n")["items","what","unit","qty","why","cost"].forEach(k=>delete m[k]);
+        if(m.s==="n")["items","what","unit","qty","why","cost","joker","tp","pl","co"].forEach(k=>delete m[k]);
         data.days[d]=m;
       }
       if(d<data.start)data.start=d;n++;
     });
     if(!n)return;
-    persist();flashDate=sel;renderAll();
+    persist();flashDate=sel;showUndo();renderAll();
     const t=new Date(),el=$("auto");el.textContent="Automatikusan mentve ✓ "+pad(t.getHours())+":"+pad(t.getMinutes());el.classList.add("ok");
   };
   if(now)run();else autoT=setTimeout(run,600);
 }
 $("panel").oninput=()=>autoSave(false);
 $("panel").onchange=()=>autoSave(true);
-$("clear").onclick=()=>{const L=selDays.filter(d=>data.days[d]);if(!L.length||!confirm(L.length+" nap adatainak törlése?"))return;L.forEach(d=>delete data.days[d]);persist();openPanel(sel);renderAll();toast("Törölve")};
+$("clear").onclick=()=>{const L=selDays.filter(d=>data.days[d]);if(!L.length||!confirm(L.length+" nap adatainak törlése?"))return;uT=0;pushUndo();L.forEach(d=>delete data.days[d]);persist();showUndo();openPanel(sel);renderAll();toast("Törölve")};
 
 /* Főszámláló */
 function renderTop(){
@@ -626,7 +750,7 @@ function renderTop(){
   $("h1").textContent=(store.name?store.name+" – ":"")+C().title;
   countTo($("big"),s);
   $("big").classList.toggle("zero",s===0);$("hero").classList.toggle("zero",s===0);
-  $("sub").textContent="nap";$("since").textContent=s===0?"Ma ittál. Holnap új nap, új széria.":(ld?"Utolsó "+C().last+": "+ld:"Szép munka!");
+  $("sub").textContent="nap";$("since").textContent=s===0?W.today(C()):(ld?"Utolsó "+C().last+": "+ld:"Szép munka!");
   const tg=g||MS.find(m=>m>s)||MS[MS.length-1];$("rf").style.strokeDashoffset=540.35*(1-Math.min(1,s/tg));$("goal").innerHTML=`<div class="mute">${g?"Cél":"Következő jelvény"}: ${Math.min(s,tg)} / ${tg} nap</div>`;
   let miss=0;
   for(let d=monthStart()>data.start?monthStart():data.start;d<t;d=addD(d,1))if(!data.days[d])miss++;
@@ -636,7 +760,7 @@ function renderTop(){
     w.innerHTML=(!te?"A mai nap még nincs kitöltve. ":"")+(miss?`Az idei hónapban ${miss} korábbi nap nincs kitöltve (szaggatott keret a naptárban).`:"");
   }else w.classList.add("hidden");
   if(data.profile.cost)$("goal").innerHTML+=`<div class="mute">Megspórolt: ${(soberDays()*data.profile.cost).toLocaleString("hu-HU")} Ft</div>`;
-  renderWeek();renderChips();renderRisk();renderLimit();renderWeekCard();renderEvtBanner();renderSg();renderBk();renderRefl();renderEvents();celebrate();
+  renderWeek();renderChips();renderRisk();renderLimit();renderWeekCard();renderEvtBanner();renderSg();renderBk();renderRefl();renderEvents();renderChal();renderChk();chalCheck();celebrate();
 }
 
 /* Statisztika */
@@ -706,6 +830,7 @@ function renderStats(){
   const tlH=`<h2 style="margin-top:14px">Mi történhet a testeddel?</h2>`+fs.map(([d,tx])=>`<div class="entry" style="opacity:${sNow>=d?1:.5}"><div><b>${d} nap${sNow>=d?" ✓":" (még "+(d-sNow)+")"}</b><small>${esc(tx)}</small></div></div>`).join("")+`<p class="mute">Általános tájékoztatás, nem orvosi tanács.${store.mode==="alc"?" Ha korábban nagy mennyiséget, naponta ittál, az abbahagyás elvonási tüneteket okozhat, ami veszélyes lehet: ilyenkor egyeztess orvossal.":""}</p>`;
   if(store.lite){
     $("stats").innerHTML=`<div class="grid" style="margin-top:12px"><div><b>${streak()}</b><span>jelenlegi széria</span></div><div><b>${Math.max(0,...ss)}</b><span>legjobb széria</span></div><div><b>${pct}%</b><span>ivásmentes arány</span></div><div><b>${sobr}</b><span>ivásmentes nap</span></div><div><b>${drank}</b><span>ivós nap</span></div><div><b>${A.sp?ft(A.sp):"–"}</b><span>költés e hónapban</span></div></div><p class="mute">Időszak: ${({30:"utolsó 30 nap",month:"ez a hónap",all:"teljes időszak"})[p]}</p><h2 style="margin-top:14px">Heti ivásmentes napok</h2>${chart}`;
+    $("stats").innerHTML=tx($("stats").innerHTML);
     return;
   }
   $("stats").innerHTML=`
@@ -721,7 +846,7 @@ function renderStats(){
   <h2 style="margin-top:14px">Mennyiség</h2>
   <div class="grid">
     <div><b>${fl(ml/1000)} l</b><span>összes ital</span></div>
-    ${Object.entries(C().units).map(([k,v])=>`<div><b>${fl(cnt[k]||0)}</b><span>${v[0].toLowerCase()}</span></div>`).join("")}
+    ${Object.entries(C().units).concat(data.units.map(u=>[u.id,[u.n]])).map(([k,v])=>`<div><b>${fl(cnt[k]||0)}</b><span>${v[0].toLowerCase()}</span></div>`).join("")}
     <div><b>${withQty?fl(ml/withQty/1000):"0"} l</b><span>átlag ivós napon</span></div>
     <div><b>${fl(maxMl/1000)} l</b><span>legtöbb egy napon</span></div>
     ${cost?`<div><b>${(sobr*cost).toLocaleString("hu-HU")} Ft</b><span>megspórolt</span></div>`:""}
@@ -731,8 +856,11 @@ function renderStats(){
   <p class="mute">Átvészelt késztetések (SOS): ${data.sos||0}. Hangulat átlag (1–5): ivós napokon ${av(moI)}, ivásmentes napokon ${av(moN)}.</p>
   ${weekCard}
   ${cmpH}
-  ${store.mode==="cus"?libH.split('<h2 style="margin-top:14px">Egészség (becslés)</h2>')[0]:libH}
+  ${isX()?libH.split('<h2 style="margin-top:14px">Egészség (becslés)</h2>')[0]:libH}
   ${projH}
+  <h2 style="margin-top:14px">Helyzet-elemzés</h2>${ctxHTML()}
+  <h2 style="margin-top:14px">Check-in összefüggések</h2>${chkHTML()}
+  <h2 style="margin-top:14px">Követések összevetése</h2>${crossHTML()}
   ${tlH}
   <h2 style="margin-top:14px">Heti ivásmentes napok</h2>${chart}
   <h2 style="margin-top:14px">Jelvények</h2><div class="badges">${MS.map(m=>`<div class="badge ${best>=m?"on":""}"><b>${m}</b><span>nap</span></div>`).join("")}</div>
@@ -741,12 +869,13 @@ function renderStats(){
   <h2 style="margin-top:14px">Leggyakoribb okok</h2>${bars(why)}
   <h2 style="margin-top:14px">Hónapok</h2>
   <table><tr><th>Hónap</th><th>Ivós</th><th>Ivásmentes</th><th>Arány</th><th>Ital</th></tr>${mrows}</table>`;
+  $("stats").innerHTML=tx($("stats").innerHTML);
 }
 $("period").onchange=renderStats;
 
 /* Profil */
 function renderProf(){
-  $("name").value=store.name;$("theme").value=store.theme;$("ptrk").textContent="Beállítások – "+C().label;$("cost").value=data.profile.cost||"";$("limD").value=String(data.profile.limD||0);$("limQ").value=data.profile.limQ||"";$("alts").value=(data.profile.alts||[]).join("\n");$("sgn").value=data.profile.sgN||"";$("sga").value=data.profile.sgA||"";$("oldQ").value=data.profile.oldQ||"";$("oldC").value=data.profile.oldC||"";$("plans").value=(data.profile.plans||[]).join("\n");$("cn").value=store.custName||"";renderSnaps();$("pinst").textContent=store.pin?"PIN be van állítva.":"Nincs PIN beállítva.";
+  $("name").value=store.name;$("theme").value=store.theme;$("ptrk").textContent="Beállítások – "+C().label;$("cost").value=data.profile.cost||"";$("limD").value=String(data.profile.limD||0);$("limQ").value=data.profile.limQ||"";$("alts").value=(data.profile.alts||[]).join("\n");$("sgn").value=data.profile.sgN||"";$("sga").value=data.profile.sgA||"";$("oldQ").value=data.profile.oldQ||"";$("oldC").value=data.profile.oldC||"";$("plans").value=(data.profile.plans||[]).join("\n");renderSnaps();renderTrk();renderPsum();renderProfX();$("pinst").textContent=store.pin?"PIN be van állítva.":"Nincs PIN beállítva.";
   $("goalSel").value=String(data.profile.goal);
   const n=Object.keys(data.days).length;
   $("psum").textContent="Követés kezdete: "+firstDay()+" · rögzített napok: "+n;
@@ -758,12 +887,12 @@ $("wipe").onclick=()=>{
     store.t[store.mode]=mkT();norm();persist();sel=null;$("panel").classList.add("hidden");renderAll();toast("Minden adat törölve");
   }
 };
-$("export").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(store,null,1)],{type:"application/json"}));a.download="napok-"+todayS()+".json";a.click();store.lastExport=todayS();persist();renderTop();toast("Fájl elmentve")};
+$("export").onclick=async()=>{store.lastExport=todayS();persist();const payload=ckey?JSON.stringify(await encStr(JSON.stringify(store))):JSON.stringify(store,null,1);const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([payload],{type:"application/json"}));a.download="napok-"+todayS()+(ckey?"-titkositott":"")+".json";a.click();renderTop();toast("Fájl elmentve")};
 $("import").onclick=()=>$("file").click();
 $("file").onchange=e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
-  r.onload=()=>{try{const j=JSON.parse(r.result);if(j.t){store=j;norm();persist();setMode(store.mode,true);toast("Adatok betöltve")}else if(j.days&&j.start){store.t[store.mode]=j;norm();persist();setMode(store.mode,true);toast("Adatok betöltve")}else alert("Hibás fájl.")}catch(x){alert("Hibás fájl.")}};
+  r.onload=async()=>{try{let j=JSON.parse(r.result);if(j.enc){const pw=prompt("Add meg a fájl jelszavát:");if(!pw)return;j=JSON.parse((await decWith(j,pw)).text)}if(j.t){store=j;norm();persist();setMode(store.mode,true);toast("Adatok betöltve")}else if(j.days&&j.start){store.t[store.mode]=j;norm();persist();setMode(store.mode,true);toast("Adatok betöltve")}else alert("Hibás fájl.")}catch(x){alert("Hibás fájl vagy jelszó.")}};
   r.readAsText(f);
 };
 
@@ -777,7 +906,7 @@ function showTab(t){
   $("ind").style.transform="translateX("+TABS.indexOf(mt)*100+"%)";
   const pg=$("p-"+t);pg.classList.remove("enter");void pg.offsetWidth;pg.classList.add("enter");
   if(t==="home")renderHome();
-  if(t==="add"){renderCal(true);renderEvents();askToday()}
+  if(t==="add"){renderCal(true);renderEvents();renderYear();renderLog();renderChal();renderChk();askToday()}
   if(t==="stats")renderStats();
   if(t==="prof"){renderProf();renderLib()}
   $("app").scrollTo(0,0);
@@ -844,7 +973,7 @@ function libStats(from,t){
 /* Italok tára + napi tételek */
 let editId=null,curItems=[];
 const itemSum=a=>a.reduce((x,i)=>x+(i.p||0)*i.q,0);
-function fillLib(){$("lib").innerHTML='<option value="">Válassz italt…</option>'+data.lib.map(i=>`<option value="${i.id}">${esc(i.n)} (${i.ml} ml${i.p?", "+ft(i.p):""})</option>`).join("")}
+function fillLib(){renderChips2();$("lib").innerHTML='<option value="">Válassz italt…</option>'+data.lib.map(i=>`<option value="${i.id}">${esc(i.n)} (${i.ml} ml${i.p?", "+ft(i.p):""})</option>`).join("")}
 function renderItems(){
   const ed=sel&&editable(sel);
   $("items").innerHTML=curItems.map((i,k)=>`<div class="entry"><div>${fl(i.q)}× <b>${esc(i.n)}</b><small>${i.ml} ml · ${i.f?"ingyen (meghívtak)":ft((i.p||0)*i.q)}</small></div><button class="mini danger" data-k="${k}" ${ed?"":"disabled"}>×</button></div>`).join("")+(curItems.length?`<p class="mute">Összesen: ${ft(itemSum(curItems))}</p>`:"");
@@ -856,7 +985,7 @@ $("ladd").onclick=()=>{
   if(!(q>0)){alert("Add meg a darabszámot.");return}
   const fr=$("lpay").value==="free";curItems.push({n:i.n,t:i.t,ml:i.ml,p:fr?0:i.p,a:i.a,q,f:fr?1:0});renderItems();autoSave(true);
 };
-function renderLib(){
+function renderLib(){renderUnits();
   const c=C();$("libh").textContent="Italok – "+c.label;
   $("lt").innerHTML=c.types.map(t=>`<option>${t}</option>`).join("");
   $("lal").textContent=store.mode==="alc"?"Alkoholtartalom (%)":store.mode==="ene"?"Koffein (mg / adag)":"Egyéb érték (nem kötelező)";
@@ -866,7 +995,7 @@ function renderLib(){
 function libReset(){editId=null;["ln","lm","lp","la"].forEach(k=>$(k).value="");$("lsave").textContent="Hozzáadás";$("lcancel").classList.add("hidden")}
 $("lsave").onclick=()=>{
   const n=$("ln").value.trim(),ml=parseFloat($("lm").value.replace(",",".")),p=parseInt($("lp").value.replace(/\D/g,""),10)||0,a=parseFloat($("la").value.replace(",","."))||0;
-  if(!n||(store.mode!=="cus"&&!(ml>0))){alert("Add meg a nevet és a mennyiséget (ml).");return}
+  if(!n||(!isX()&&!(ml>0))){alert("Add meg a nevet és a mennyiséget (ml).");return}
   const o={id:editId||Date.now().toString(36),n,t:$("lt").value,ml:ml||0,p,a};
   if(editId){const k=data.lib.findIndex(x=>x.id===editId);if(k>=0)data.lib[k]=o}else data.lib.push(o);
   libReset();persist();renderLib();fillLib();toast("Ital elmentve");
@@ -899,8 +1028,8 @@ $("sosDone").onclick=()=>{data.sos=(data.sos||0)+1;persist();sosClose();confetti
 
 /* Alkalmak, cél, reflexió, mentések, megosztás */
 const MODES=["alc","ene","cus"];
-function updCus(){const b=document.querySelector('.mswitch button[data-m="cus"]');if(b)b.textContent=CFG.cus.label}
-$("cn").oninput=()=>{store.custName=$("cn").value.trim();persist();updCus();renderTop()};
+
+
 $("ep").onchange=()=>$("emw").classList.toggle("hidden",$("ep").value!=="max");
 $("esave").onclick=()=>{
   const d=$("ed").value,n=$("en").value.trim(),isM=$("ep").value==="max",mx=isM?(parseInt($("em").value.replace(/\D/g,""),10)||0):0;
@@ -912,13 +1041,13 @@ function evRes(ev){if(ev.d>todayS())return"";const e=data.days[ev.d];if(!e)retur
 function renderEvents(){
   $("ed").min=todayS();
   const L=data.events.slice().sort((a,b)=>b.d.localeCompare(a.d)).slice(0,8);
-  $("elist").innerHTML=L.map(ev=>`<div class="entry"><div><b>${ev.d}</b> · ${esc(ev.n)}<small>Tervem: ${ev.max?"legfeljebb "+ev.max+" adag":"nem iszom"}${evRes(ev)}</small></div><button class="mini danger" data-x="${ev.id}">×</button></div>`).join("");
+  $("elist").innerHTML=L.map(ev=>`<div class="entry"><div><b>${ev.d}</b> · ${esc(ev.n)}<small>Tervem: ${ev.max?"legfeljebb "+ev.max+" adag":W.pr(C()).toLowerCase()}${evRes(ev)}</small></div><button class="mini danger" data-x="${ev.id}">×</button></div>`).join("");
 }
 $("elist").onclick=e=>{const x=e.target.dataset&&e.target.dataset.x;if(x&&confirm("Törlöd az alkalmat?")){data.events=data.events.filter(v=>v.id!==x);persist();renderEvents();renderTop()}};
 function renderEvtBanner(){
   const el=$("evt"),t=todayS(),y=addD(t,1),L=data.events.filter(e=>e.d===t||e.d===y);
   if(!L.length){el.classList.add("hidden");return}
-  el.innerHTML="<h2>Közelgő alkalom</h2>"+L.map(e=>`<p style="margin:0 0 6px"><b>${e.d===t?"Ma":"Holnap"}:</b> ${esc(e.n)} · tervem: ${e.max?"legfeljebb "+e.max+" adag":"nem iszom"}</p>`).join("");
+  el.innerHTML="<h2>Közelgő alkalom</h2>"+L.map(e=>`<p style="margin:0 0 6px"><b>${e.d===t?"Ma":"Holnap"}:</b> ${esc(e.n)} · tervem: ${e.max?"legfeljebb "+e.max+" adag":W.pr(C()).toLowerCase()}</p>`).join("");
   el.classList.remove("hidden");
 }
 function renderSg(){
@@ -945,15 +1074,23 @@ function renderBk(){
 }
 $("bk").onclick=e=>{if(e.target.id==="bkB")$("export").onclick()};
 function snaps(){try{return JSON.parse(localStorage.getItem("nodrink-snaps")||"[]")}catch(e){return[]}}
-function snapNow(){const a=snaps(),t=todayS();if(a.length&&a[a.length-1].d===t)return;a.push({d:t,s:JSON.stringify(store)});while(a.length>7)a.shift();try{localStorage.setItem("nodrink-snaps",JSON.stringify(a))}catch(e){}}
+function snapNow(){
+  if(LOCKED)return;
+  const a=snaps(),t=todayS();if(a.length&&a[a.length-1].d===t)return;
+  const add=x=>{a.push({d:t,s:x});while(a.length>7)a.shift();try{localStorage.setItem("nodrink-snaps",JSON.stringify(a))}catch(e){}};
+  if(ckey)encStr(JSON.stringify(store)).then(add);else add(JSON.stringify(store));
+}
 function renderSnaps(){
   const a=snaps();
-  $("snaps").innerHTML=a.length?a.map((v,i)=>`<div class="entry"><div><b>${v.d}</b><small>${Math.round(v.s.length/1024)} KB</small></div><button class="mini" data-r="${i}">Visszaállítás</button></div>`).reverse().join(""):'<p class="mute">Még nincs másolat.</p>';
+  $("snaps").innerHTML=a.length?a.map((v,i)=>`<div class="entry"><div><b>${v.d}</b><small>${Math.round((typeof v.s==="string"?v.s.length:JSON.stringify(v.s).length)/1024)} KB</small></div><button class="mini" data-r="${i}">Visszaállítás</button></div>`).reverse().join(""):'<p class="mute">Még nincs másolat.</p>';
 }
-$("snaps").onclick=e=>{
+$("snaps").onclick=async e=>{
   const r=e.target.dataset&&e.target.dataset.r;if(r===undefined)return;
   const v=snaps()[+r];if(!v||!confirm(v.d+" másolatának visszaállítása? A jelenlegi adatok felülíródnak."))return;
-  try{store=JSON.parse(v.s);norm();persist();setMode(store.mode,true);renderProf();toast("Visszaállítva: "+v.d)}catch(x){alert("A másolat nem olvasható.")}
+  try{
+    const txt=typeof v.s==="string"?v.s:dec8(new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64Buf(v.s.i)},ckey,b64Buf(v.s.c))));
+    store=JSON.parse(txt);norm();persist();setMode(store.mode,true);renderProf();toast("Visszaállítva: "+v.d);
+  }catch(x){alert("A másolat nem olvasható.")}
 };
 [["sgn","sgN",0],["sga","sgA",1],["oldQ","oldQ",1],["oldC","oldC",1]].forEach(([id,k,n])=>$(id).onchange=()=>{data.profile[k]=n?(parseInt($(id).value.replace(/\D/g,""),10)||0):$(id).value.trim();persist();renderTop();toast("Elmentve")});
 $("plans").onchange=()=>{data.profile.plans=$("plans").value.split("\n").map(x=>x.trim()).filter(Boolean);persist();toast("Tervek elmentve")};
@@ -1026,6 +1163,14 @@ const WID={
   sg:{t:"Megtakarítási cél",html:()=>stgCard("sg","Megtakarítási cél","Állíts be célt a Profilban.")},
   craving:{t:"Késztetés átlag",html:()=>{let a=0,n=0;for(const d in data.days){const c=data.days[d].crave;if(typeof c==="number"){a+=c;n++}}return tileW(n?fl(a/n):"–","átlagos késztetés (0–10)")}},
   timeline:{t:"Mi történhet a testeddel?",html:()=>{const s0=streak(),f=C().facts||[],lt=[...f].reverse().find(x=>x[0]<=s0),nx=f.find(x=>x[0]>s0);return cardW("Mi történhet a testeddel?",(lt?`<p style="margin:0 0 8px"><b>${lt[0]} nap ✓</b><br>${esc(lt[1])}</p>`:"")+(nx?`<p class="mute" style="margin:0">Következő: ${nx[0]} nap (még ${nx[0]-s0}). ${esc(nx[1])}</p>`:"")+'<p class="mute">Általános tájékoztatás, nem orvosi tanács.</p>')}},
+  today:{t:"Mai nap (gyors rögzítés)",html:()=>{const e=data.days[todayS()],c=C();return cardW("Mai nap",`<p class="mute" style="margin:0 0 10px">${!e?"Ma még nincs kitöltve":(e.s==="i"?"Ma rögzítetted: "+W.yes(c).toLowerCase():"Ma: "+W.no(c).toLowerCase()+" ✓")}</p><div class="row" style="margin-top:0"><button class="main" data-qno="1" style="flex:1">${W.no(c)}</button><button data-qyes="1" style="flex:1">${W.yes(c)}</button></div>`)}},
+  all:{t:"Minden követés (szériák)",html:()=>cardW("Minden követés",`<div class="grid">${Object.keys(store.t).map(k=>`<div><b>${streakFor(store.t[k])}</b><span>${esc(trkLabel(k))}</span></div>`).join("")}</div>`)},
+  cross:{t:"Követések összevetése",html:()=>cardW("Követések összevetése",crossHTML())},
+  ctx:{t:"Helyzet-elemzés",html:()=>cardW("Helyzet-elemzés",ctxHTML())},
+  chal:{t:"Kihívás",html:()=>cardW("Kihívás",chalHTML())},
+  chk:{t:"Napi check-in",html:()=>{const k=data.chk[todayS()];return cardW("Napi check-in",k?`<p style="margin:0">${k.sl?"Alvás: "+k.sl+" óra<br>":""}${k.m1?"Hangulat reggel: "+k.m1+"/5<br>":""}${k.m2?"Hangulat este: "+k.m2+"/5<br>":""}${k.kept?"Terv betartva: "+({igen:"igen",reszben:"részben",nem:"nem"})[k.kept]:""}</p>`:'<p class="mute" style="margin:0">Ma még nincs check-in. Töltsd ki a Felvitel oldalon.</p>')}},
+  heat:{t:"Havi hőtérkép",html:()=>{const t=todayS(),ym=t.slice(0,7),f=new Date(+ym.slice(0,4),+ym.slice(5,7)-1,1),n=new Date(f.getFullYear(),f.getMonth()+1,0).getDate(),off=(f.getDay()+6)%7;let h='<div class="mh">'+"<i></i>".repeat(off);for(let i=1;i<=n;i++){const d=ym+"-"+pad(i),e=data.days[d];h+=`<span class="${e?(e.s==="i"?"bad":"ok"):(d>t?"fut":"")}">${i}</span>`}return cardW("Havi hőtérkép",h+"</div>")}},
+  cnt:{t:"Saját számlálók",html:()=>cardW("Saját számlálók",data.counters.length?data.counters.map(c=>`<div class="entry"><div>${esc(c.n)}</div><b>${Math.max(0,diff(todayS(),c.d))} nap</b></div>`).join(""):'<p class="mute" style="margin:0">Adj meg számlálót a Profilban.</p>')},
   sos:{t:"SOS gomb",html:()=>'<button class="sosb wd" data-sos="1">SOS – kívánásom van</button>'}
 };
 function renderHome(){
@@ -1033,45 +1178,351 @@ function renderHome(){
   renderTop();
   $("stage").appendChild($("hero"));
   const hw=$("hw");hw.innerHTML="";
-  data.home.forEach(id=>{if(id==="streak")hw.appendChild($("hero"));else hw.insertAdjacentHTML("beforeend",WID[id].html())});
-  if(!data.home.length)hw.innerHTML='<div class="card wd"><p class="mute" style="margin:0">Nincs megjelenített elem. A Testreszabás gombbal adhatsz hozzá statisztikákat.</p></div>';
+  data.home.forEach(id=>{if(id==="streak")hw.appendChild($("hero"));else hw.insertAdjacentHTML("beforeend",`<div class="wcell${data.hsize[id]==="s"?" s":""}">${tx(WID[id].html())}</div>`)});
+  if(!data.home.length)hw.innerHTML='<div class="card wd" style="grid-column:span 2"><p class="mute" style="margin:0">Nincs megjelenített elem. A Testreszabás gombbal adhatsz hozzá statisztikákat.</p></div>';
   renderHEdit();
 }
-$("hw").onclick=e=>{if(e.target.dataset&&e.target.dataset.sos)sosOpen()};
+$("hw").onclick=e=>{
+  const d=e.target.dataset||{};
+  if(d.sos)sosOpen();chalAct(d);
+  if(d.qno){const t=todayS();if(data.days[t]&&data.days[t].s==="i"&&!confirm("Ma már rögzítettél. Felülírod?"))return;uT=0;pushUndo();data.days[t]={s:"n"};persist();showUndo();flashDate=t;renderAll();toast("Rögzítve: "+W.no(C()).toLowerCase())}
+  if(d.qyes){const t=todayS();uT=0;pushUndo();data.days[t]=Object.assign({},data.days[t]||{},{s:"i"});persist();showTab("add");const n=new Date();view={y:n.getFullYear(),m:n.getMonth()};selDays=[t];openPanel(t);$("panel").scrollIntoView({behavior:"smooth"})}
+};
 let hed=false;
 $("hedB").onclick=()=>{hed=!hed;$("hedB").textContent=hed?"Kész":"Testreszabás";renderHEdit()};
+const TPLS=[{n:"Minimál",ids:["streak"],sz:{}},{n:"Kiegyensúlyozott",ids:["streak","today","week","best","pct","chart"],sz:{best:"s",pct:"s"}},{n:"Részletes",ids:["streak","today","chips","week","weekSum","chart","risk","lim","sg","badges","timeline"],sz:{}}];
 function renderHEdit(){
   const el=$("hedit");
   if(!hed){el.classList.add("hidden");return}
-  const cur=data.home;
-  el.innerHTML='<h2>Főoldal testreszabása</h2><p class="mute">Rendezd át a nyilakkal, vagy vedd le az elemeket.</p>'+(cur.length?cur.map((id,i)=>`<div class="entry"><div>${esc(WID[id].t)}</div><div><button class="mini" data-up="${i}" ${i?"":"disabled"}>↑</button> <button class="mini" data-dn="${i}" ${i<cur.length-1?"":"disabled"}>↓</button> <button class="mini danger" data-rm="${i}">×</button></div></div>`).join(""):'<p class="mute">Nincs megjelenített elem.</p>')+'<h2 style="margin-top:12px">Hozzáadható</h2>'+Object.keys(WID).filter(k=>!cur.includes(k)).map(k=>`<div class="entry"><div>${esc(WID[k].t)}</div><button class="mini" data-add="${k}">+ Hozzáad</button></div>`).join("");
+  const cur=data.home,all=TPLS.concat(store.tpls||[]);
+  el.innerHTML='<h2>Főoldal testreszabása</h2><h2 style="font-size:15px;margin-top:6px">Sablonok</h2><div>'+all.map((t,i)=>`<span class="chip" data-tp="${i}" style="cursor:pointer">${esc(t.n)}${i>=TPLS.length?` <b data-tpx="${i-TPLS.length}">×</b>`:""}</span>`).join("")+'<span class="chip" data-tps="1" style="cursor:pointer;background:var(--okbg)">+ Jelenlegi mentése</span></div>'
+  +'<h2 style="font-size:15px;margin-top:12px">Elemek</h2><p class="mute" style="margin:0 0 4px">Húzd a ≡ jelet, vagy használd a nyilakat.</p>'
+  +(cur.length?cur.map((id,i)=>`<div class="entry" data-row="${i}"><div><span class="grip" data-g="${i}">≡</span> ${esc(WID[id].t)}</div><div>${id==="streak"?"":`<button class="mini" data-sz="${id}">${data.hsize[id]==="s"?"Kicsi":"Nagy"}</button> `}<button class="mini" data-up="${i}" ${i?"":"disabled"}>↑</button> <button class="mini" data-dn="${i}" ${i<cur.length-1?"":"disabled"}>↓</button> <button class="mini danger" data-rm="${i}">×</button></div></div>`).join(""):'<p class="mute">Nincs elem.</p>')
+  +'<h2 style="font-size:15px;margin-top:12px">Hozzáadható</h2>'+Object.keys(WID).filter(k=>!cur.includes(k)).map(k=>`<div class="entry"><div>${esc(WID[k].t)}</div><button class="mini" data-add="${k}">+ Hozzáad</button></div>`).join("");
   el.classList.remove("hidden");
 }
 $("hedit").onclick=e=>{
   const d=e.target.dataset;if(!d)return;const a=data.home;
-  if(d.up!==undefined){const i=+d.up;[a[i-1],a[i]]=[a[i],a[i-1]]}
+  if(d.tpx!==undefined){store.tpls.splice(+d.tpx,1);persist();renderHEdit();return}
+  if(d.tp!==undefined){const t=TPLS.concat(store.tpls)[+d.tp];data.home=t.ids.filter(k=>WID[k]);data.hsize=Object.assign({},t.sz||{});toast("Sablon alkalmazva: "+t.n)}
+  else if(d.tps){const n=prompt("Mi legyen a sablon neve?");if(!n||!n.trim())return;store.tpls.push({n:n.trim().slice(0,24),ids:a.slice(),sz:Object.assign({},data.hsize)});toast("Sablon elmentve")}
+  else if(d.sz){data.hsize[d.sz]=data.hsize[d.sz]==="s"?"l":"s"}
+  else if(d.up!==undefined){const i=+d.up;[a[i-1],a[i]]=[a[i],a[i-1]]}
   else if(d.dn!==undefined){const i=+d.dn;[a[i+1],a[i]]=[a[i],a[i+1]]}
   else if(d.rm!==undefined)a.splice(+d.rm,1);
   else if(d.add)a.push(d.add);
   else return;
   persist();renderHome();
 };
+let dragI=null;
+$("hedit").addEventListener("pointerdown",e=>{const g=e.target.dataset&&e.target.dataset.g;if(g===undefined)return;dragI=+g;e.preventDefault()});
+document.addEventListener("pointermove",e=>{
+  if(dragI===null)return;
+  const r=document.elementFromPoint(e.clientX,e.clientY),row=r&&r.closest&&r.closest("[data-row]");if(!row)return;
+  const j=+row.dataset.row;
+  if(j!==dragI){const a=data.home,[x]=a.splice(dragI,1);a.splice(j,0,x);dragI=j;renderHEdit()}
+});
+document.addEventListener("pointerup",()=>{if(dragI!==null){dragI=null;persist();renderHome()}});
 $("statsB").onclick=()=>showTab("stats");
 $("statsBack").onclick=()=>showTab("prof");
 
+/* Visszavonás, évnézet, keresés, gyorsválasztók */
+let undoSt=[],uT=0,undoTT;
+function pushUndo(){if(Date.now()-uT<4000)return;uT=Date.now();undoSt.push(JSON.stringify({m:store.mode,d:data.days,s:data.start}));if(undoSt.length>20)undoSt.shift()}
+function showUndo(){$("undoT").classList.add("show");clearTimeout(undoTT);undoTT=setTimeout(()=>$("undoT").classList.remove("show"),6000)}
+$("undoB").onclick=()=>{
+  const v=undoSt.pop();if(!v)return;const o=JSON.parse(v);
+  if(o.m!==store.mode)setMode(o.m,true);
+  data.days=o.d;data.start=o.s;persist();uT=0;$("undoT").classList.remove("show");
+  if(sel)openPanel(sel);renderAll();toast("Visszavonva");
+};
+$("qsel").onclick=e=>{
+  const q=e.target.dataset&&e.target.dataset.q;if(!q)return;
+  const t=todayS(),L=[];
+  for(let d=monthStart();d<=t;d=addD(d,1)){const dw=parse(d).getDay();
+    if((q==="3"&&diff(t,d)<3)||(q==="wk"&&d>=monOf())||(q==="we"&&(dw===0||dw===6))||q==="mo")L.push(d)}
+  if(!L.length){toast("Nincs ilyen nap");return}
+  selDays=L;openPanel(L[L.length-1]);
+};
+let oy=new Date().getFullYear();
+function renderYear(){
+  $("oyl").textContent=oy;
+  let h="";
+  for(let m=0;m<12;m++){
+    const n=new Date(oy,m+1,0).getDate();
+    h+=`<div class="yr"><span>${MN[m].slice(0,3)}</span><div class="yc">`;
+    for(let d=1;d<=31;d++){
+      if(d>n){h+='<i></i>';continue}
+      const k=oy+"-"+pad(m+1)+"-"+pad(d),e=data.days[k];
+      h+=`<button class="ycell ${e?(e.s==="i"?"bad":"ok"):""}" data-d="${k}" aria-label="${k}"></button>`;
+    }
+    h+="</div></div>";
+  }
+  $("oyh").innerHTML=h;
+}
+$("oyp").onclick=()=>{oy--;renderYear()};
+$("oyn").onclick=()=>{oy++;renderYear()};
+$("oyh").onclick=e=>{const d=e.target.dataset&&e.target.dataset.d;if(!d)return;view={y:+d.slice(0,4),m:+d.slice(5,7)-1};selDays=[d];openPanel(d);$("cal").scrollIntoView({behavior:"smooth",block:"center"})};
+function renderLog(){
+  const q=($("lq").value||"").trim().toLowerCase(),f=$("lf").value,c=C();
+  const L=Object.keys(data.days).sort().reverse().filter(d=>{
+    const e=data.days[d];if(f&&e.s!==f)return false;
+    if(!q)return true;
+    return [e.what,e.why,e.refl,e.note].concat((e.items||[]).map(i=>i.n)).join(" ").toLowerCase().includes(q);
+  }).slice(0,30);
+  $("lres").innerHTML=L.length?L.map(d=>{const e=data.days[d];return `<div class="entry" data-d="${d}" style="cursor:pointer"><div><b>${d}</b> · ${e.s==="i"?W.yes(c):W.no(c)}<small>${esc([e.what,e.why,e.refl].filter(Boolean).join(" · "))}</small></div></div>`}).join(""):'<p class="mute">Nincs találat.</p>';
+}
+$("lq").oninput=renderLog;$("lf").onchange=renderLog;
+$("lres").onclick=e=>{const r=e.target.closest&&e.target.closest("[data-d]");if(!r)return;const d=r.dataset.d;view={y:+d.slice(0,4),m:+d.slice(5,7)-1};selDays=[d];openPanel(d);$("cal").scrollIntoView({behavior:"smooth",block:"center"})};
+
+/* Követések kezelése, profil összegzés */
+function renderTrk(){
+  $("kind").innerHTML='<option value="">Válassz…</option>'+Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${k==="own"?"Saját név megadása…":esc(v.name)}</option>`).join("");
+  $("trklist").innerHTML=Object.keys(store.t).map(k=>{const base=!!CFG[k];return `<div class="entry"><div><b>${esc(trkLabel(k))}</b><small>${base?"alap követés":"saját követés"}</small></div>${base?"":`<div><button class="mini" data-rn="${k}">Átnevez</button> <button class="mini danger" data-rm="${k}">×</button></div>`}</div>`}).join("");
+}
+$("kind").onchange=()=>$("kname").classList.toggle("hidden",$("kind").value!=="own");
+$("kadd").onclick=()=>{
+  if(Object.keys(store.t).filter(k=>!CFG[k]).length>=10){alert("Legfeljebb 10 további követés vehető fel.");return}
+  const kd=$("kind").value;if(!kd){alert("Válassz egy követést a listából.");return}
+  const nm=$("kname").value.trim();if(kd==="own"&&!nm){alert("Add meg a követés nevét.");return}
+  const key="x"+(++store.xn),T=mkT();T.kind=kd;if(kd==="own")T.name=nm;store.t[key]=T;
+  norm();persist();$("kname").value="";$("kind").value="";$("kname").classList.add("hidden");
+  setMode(key);renderTrk();toast("Követés hozzáadva");
+};
+$("trklist").onclick=e=>{
+  const d=e.target.dataset||{};
+  if(d.rm&&confirm("Törlöd ezt a követést és minden adatát? Előtte érdemes fájlba menteni.")){
+    delete store.t[d.rm];const was=store.mode===d.rm;norm();persist();setMode(was?"alc":store.mode,true);renderTrk();toast("Követés törölve");
+  }
+  if(d.rn){const T=store.t[d.rn],n=prompt("Új név:",xCfg(T).label);if(n&&n.trim()){T.name=n.trim().slice(0,24);persist();renderMsw();renderTrk();applyWording();renderAll()}}
+};
+function renderPsum(){
+  const c=C();let n=0;for(const k in store.t)n+=Object.keys(store.t[k].days).length;
+  $("psum2").innerHTML=`<h2>${store.name?esc(store.name):"Üdv!"}</h2><div class="grid"><div><b>${streak()}</b><span>nap – ${esc(c.label)}</span></div><div><b>${n}</b><span>rögzített nap</span></div><div><b>${Object.keys(store.t).length}</b><span>követés</span></div></div>`;
+}
+
+/* Helyzet, check-in, kihívás, összevetés */
+const topK=o=>Object.entries(o).sort((a,b)=>b[1]-a[1])[0];
+function ctxHTML(){
+  const tp={},pl={},co={};
+  for(const d in data.days){const e=data.days[d];if(e.s!=="i")continue;[[tp,e.tp],[pl,e.pl],[co,e.co]].forEach(([o,v])=>{if(v)o[v]=(o[v]||0)+1})}
+  const t=topK(tp),p=topK(pl),q=topK(co);
+  if(!t&&!p&&!q)return'<p class="mute">Rögzítéskor add meg a napszakot, helyet és társaságot, és itt megjelenik az elemzés.</p>';
+  return `<p style="margin:0 0 6px">${t?`Napszak: <b>${t[0]}</b> (${t[1]}×)<br>`:""}${p?`Hely: <b>${p[0]}</b> (${p[1]}×)<br>`:""}${q?`Társaság: <b>${q[0]}</b> (${q[1]}×)`:""}</p>`+(t&&p?`<p class="mute" style="margin:0">Leggyakoribb kombináció: ${t[0]} · ${p[0]}${q?" · "+q[0]:""}.</p>`:"");
+}
+function streakFor(T){const ks=Object.keys(T.days).filter(k=>T.days[k].s==="i"&&!T.days[k].joker).sort(),t=todayS();return ks.length?diff(t,ks[ks.length-1]):diff(t,T.start)+1}
+function crossHTML(){
+  const A=new Set(Object.keys(data.days).filter(d=>data.days[d].s==="i"));
+  if(A.size<3)return'<p class="mute">Legalább 3 rögzített alkalom után jelenik meg.</p>';
+  let h="";
+  for(const k in store.t){
+    if(k===store.mode)continue;
+    const T=store.t[k],B=new Set(Object.keys(T.days).filter(d=>T.days[d].s==="i"));
+    if(B.size<3)continue;
+    let both=0;A.forEach(d=>{if(B.has(d))both++});
+    h+=`<p style="margin:0 0 6px">${esc(trkLabel(store.mode))} napokon <b>${esc(trkLabel(k))}</b>: ${Math.round(both/A.size*100)}% (általában: ${Math.round(B.size/(Object.keys(T.days).length||1)*100)}%)</p>`;
+  }
+  return h||'<p class="mute">Még nincs elég adat a többi követésből.</p>';
+}
+function chkHTML(){
+  const a=[0,0],b=[0,0],kp=[0,0];let n=0;
+  for(const d in data.chk){const k=data.chk[d],e=data.days[d];n++;if(k.sl&&e){const q=e.s==="i"?a:b;q[0]+=+k.sl;q[1]++}if(k.pl==="0"&&e){kp[1]++;if(e.s!=="i")kp[0]++}}
+  if(!n)return'<p class="mute">A check-in kitöltése után itt jelennek meg az összefüggések.</p>';
+  const av=q=>q[1]?fl(q[0]/q[1]):"–";
+  return `<div class="grid"><div><b>${av(a)}</b><span>alvás (óra): ivós napokon</span></div><div><b>${av(b)}</b><span>alvás (óra): ivásmentes napokon</span></div><div><b>${kp[1]?Math.round(kp[0]/kp[1]*100)+"%":"–"}</b><span>a „nem” terv betartása</span></div></div>`;
+}
+let chkTab=new Date().getHours()<15?"am":"pm";
+function renderChk(){
+  const c=data.chk[todayS()]||{},cc=C();
+  const opt=(a,sel)=>a.map(([v,l])=>`<option value="${v}" ${String(sel)===v?"selected":""}>${l}</option>`).join("");
+  const mood=[["","–"],["1","1 – nagyon rossz"],["2","2 – rossz"],["3","3 – közepes"],["4","4 – jó"],["5","5 – nagyon jó"]];
+  const am=`<label>Hány órát aludtál?</label><select data-f="sl">${opt([["","–"]].concat([4,5,6,7,8,9,10].map(x=>[String(x),x+(x===10?"+":"")+" óra"])),c.sl||"")}</select><label>Hangulat reggel</label><select data-f="m1">${opt(mood,c.m1||"")}</select><label>Mai terv</label><select data-f="pl">${opt([["","–"],["0",W.pr(cc)],["max","Legfeljebb pár adag"],["?","Még nem tudom"]],c.pl||"")}</select>`;
+  const pm=`<label>Betartottad a tervet?</label><select data-f="kept">${opt([["","–"],["igen","Igen"],["reszben","Részben"],["nem","Nem"]],c.kept||"")}</select><label>Hangulat este</label><select data-f="m2">${opt(mood,c.m2||"")}</select><label>Mi ment jól ma?</label><input data-f="gd" value="${esc(c.gd||"")}" autocomplete="off">`;
+  $("chkc").innerHTML=`<h2>Napi check-in</h2><div class="seg"><button data-t="am" class="${chkTab==="am"?"on n":""}">Reggel</button><button data-t="pm" class="${chkTab==="pm"?"on n":""}">Este</button></div>${chkTab==="am"?am:pm}`;
+}
+$("chkc").onclick=e=>{const t=e.target.dataset&&e.target.dataset.t;if(t){chkTab=t;renderChk()}};
+$("chkc").onchange=e=>{const f=e.target.dataset&&e.target.dataset.f;if(!f)return;const t=todayS();data.chk[t]=data.chk[t]||{};data.chk[t][f]=e.target.value;persist();toast("Check-in mentve")};
+const TASKS=["Igyál ma legalább 2 liter vizet","Sétálj 20 percet","Írj le 3 dolgot, amiért hálás vagy","Aludj el éjfél előtt","Főzz magadnak valami egészségeset","Beszélgess valakivel 10 percet","Csinálj 10 perc nyújtást","Takaríts ki egy fiókot","Hallgass végig egy új zenét","Menj ki a friss levegőre 15 percre","Írj egy üzenetet egy barátodnak","Készíts tervet a holnapi napra","Vegyél egy hosszú zuhanyt","Olvass 15 percet","Csinálj 20 guggolást","Próbálj ki egy új teát","Fényképezz le valami szépet","Szervezz egy programot a hétvégére","Légzőgyakorlat: 5 perc","Mondj nemet valamire, ami nem tesz jót","Hívj fel valakit, akire számíthatsz"];
+function chalInfo(){
+  const c=data.chal;if(!c)return null;
+  const t=todayS();let ok=0,fail=null;
+  for(let i=0;i<c.len;i++){const d=addD(c.start,i);if(d>t)break;const e=data.days[d];if(e&&e.s==="i"&&!e.joker){fail=d;break}ok++}
+  const di=diff(t,c.start);
+  return{c,ok,fail,day:Math.min(c.len,di+1),done:!fail&&ok>=c.len,task:TASKS[(di+(c.seed||0))%TASKS.length],tdone:!!(c.done&&c.done[t])};
+}
+function chalHTML(){
+  const i=chalInfo(),st=`<div class="row" style="margin-top:8px"><button data-cl="7">7 nap</button><button data-cl="30">30 nap</button><button data-cl="100">100 nap</button></div>`;
+  if(!i)return'<p class="mute" style="margin:0 0 4px">Válassz egy kihívást: minden napra kapsz egy apró feladatot.</p>'+st;
+  if(i.fail)return`<p style="margin:0">A kihívás megszakadt ezen a napon: ${i.fail}. Indíthatsz újat.</p>`+st;
+  if(i.done)return`<p style="margin:0"><b>Teljesítetted a ${i.c.len} napos kihívást!</b></p>`+st;
+  return`<div class="mute">${i.day}. nap / ${i.c.len}</div><div class="prog"><div style="width:${i.day/i.c.len*100}%"></div></div><p style="margin:0 0 8px"><b>Mai feladat:</b> ${esc(i.task)}</p><div class="row" style="margin-top:0"><button class="${i.tdone?"main":""}" data-cd="1" style="flex:1">${i.tdone?"Kész ✓":"Megcsináltam"}</button><button class="danger" data-cx="1">Megszakítom</button></div>`;
+}
+function renderChal(){$("chalc").innerHTML="<h2>Kihívás</h2>"+chalHTML()}
+function chalAct(d){
+  const t=todayS();
+  if(d.cl){data.chal={len:+d.cl,start:t,seed:Math.floor(Math.random()*TASKS.length),done:{}};persist();renderAll();toast("Kihívás elindult")}
+  else if(d.cd&&data.chal){data.chal.done=data.chal.done||{};data.chal.done[t]=!data.chal.done[t];persist();renderAll()}
+  else if(d.cx&&confirm("Megszakítod a kihívást?")){data.chal=null;persist();renderAll()}
+}
+$("chalc").onclick=e=>chalAct(e.target.dataset||{});
+function chalCheck(){const i=chalInfo();if(i&&i.done&&!data.chal.fin){data.chal.fin=true;persist();confetti();toast("Kihívás teljesítve!")}}
+
+/* Egyéni mértékegység, gyors tételek, számlálók, szín */
+const unitMl=u=>ML[u]!==undefined?ML[u]:((data.units.find(x=>x.id===u)||{}).ml||0);
+function renderUnits(){$("ulist").innerHTML=data.units.map((u,i)=>`<div class="entry"><div><b>${esc(u.n)}</b><small>${u.ml} ml</small></div><button class="mini danger" data-x="${i}">×</button></div>`).join("")}
+$("uadd").onclick=()=>{const n=$("un").value.trim(),ml=parseFloat($("um").value.replace(",","."));if(!n||!(ml>0)){alert("Add meg a nevet és az ml értéket.");return}data.units.push({id:"u"+Date.now().toString(36),n,ml});persist();$("un").value=$("um").value="";fillForm();renderUnits();toast("Mértékegység hozzáadva")};
+$("ulist").onclick=e=>{const x=e.target.dataset&&e.target.dataset.x;if(x!==undefined&&confirm("Törlöd a mértékegységet? A régi bejegyzések mennyisége megmarad, de a literszám nem számolódik.")){data.units.splice(+x,1);persist();fillForm();renderUnits()}};
+function renderChips2(){$("chips2").innerHTML=data.lib.slice(0,8).map(i=>`<span class="chip" data-a1="${i.id}" style="cursor:pointer">＋ ${esc(i.n)}</span>`).join("")}
+$("chips2").onclick=e=>{const i=data.lib.find(x=>x.id===(e.target.dataset&&e.target.dataset.a1));if(!i)return;const fr=$("lpay").value==="free";curItems.push({n:i.n,t:i.t,ml:i.ml,p:fr?0:i.p,a:i.a,q:1,f:fr?1:0});renderItems();autoSave(true)};
+function renderCnt(){$("cnl").innerHTML=data.counters.map((c,i)=>`<div class="entry"><div><b>${esc(c.n)}</b><small>${c.d}</small></div><button class="mini danger" data-x="${i}">×</button></div>`).join("")}
+$("cnadd").onclick=()=>{const n=$("cnn").value.trim(),d=$("cnd").value;if(!n||!d){alert("Add meg a feliratot és a dátumot.");return}data.counters.push({n,d});persist();$("cnn").value="";renderCnt();toast("Számláló hozzáadva")};
+$("cnl").onclick=e=>{const x=e.target.dataset&&e.target.dataset.x;if(x!==undefined){data.counters.splice(+x,1);persist();renderCnt()}};
+$("tcol").onchange=()=>{data.color=$("tcol").value||undefined;persist();document.body.dataset.m=palOf(store.mode);toast("Szín elmentve")};
+
+/* Megjelenés, nyelv, titkosítás beállítások */
+function applyA11y(){REDUCED=!!store.rm||matchMedia("(prefers-reduced-motion: reduce)").matches;$("app").style.zoom=store.fs||1;document.body.classList.toggle("hc",!!store.hc);document.body.classList.toggle("rm",!!store.rm)}
+function renderProfX(){
+  $("lang").value=store.lang||"hu";$("fsz").value=String(store.fs||1);$("hc").checked=!!store.hc;$("rmo").checked=!!store.rm;
+  $("tcol").value=data.color||"";renderCnt();
+  $("est").textContent=ckey?"A titkosítás be van kapcsolva.":"A titkosítás ki van kapcsolva.";$("eOff").classList.toggle("hidden",!ckey);
+}
+$("fsz").onchange=()=>{store.fs=parseFloat($("fsz").value)||1;persist();applyA11y()};
+$("hc").onchange=()=>{store.hc=$("hc").checked;persist();applyA11y()};
+$("rmo").onchange=()=>{store.rm=$("rmo").checked;persist();applyA11y()};
+$("lang").onchange=()=>{store.lang=$("lang").value;persist();setMode(store.mode,true);renderProf();applyLang()};
+function applyLang(){document.documentElement.lang=E()?"en":"hu";trAll()}
+$("eOn").onclick=async()=>{
+  const pw=$("epw").value;
+  if(pw.length<6){alert("A jelszó legalább 6 karakter legyen.");return}
+  if(!(window.crypto&&crypto.subtle)){alert("Ez a böngésző nem támogatja a titkosítást.");return}
+  if(!confirm("Bekapcsolod a titkosítást? Elfelejtett jelszóval az adatok nem állíthatók vissza."))return;
+  csalt=crypto.getRandomValues(new Uint8Array(16));ckey=await deriveKey(pw,csalt);
+  try{localStorage.removeItem("nodrink-snaps")}catch(e){}
+  persist();await encP;snapNow();$("epw").value="";renderProf();toast("Titkosítás bekapcsolva");
+};
+$("eOff").onclick=()=>{
+  if(!ckey||!confirm("Kikapcsolod a titkosítást? Az adatok újra titkosítatlanul tárolódnak."))return;
+  ckey=null;csalt=null;try{localStorage.removeItem("nodrink-snaps")}catch(e){}persist();snapNow();renderProf();toast("Titkosítás kikapcsolva");
+};
+$("dgo").onclick=async()=>{
+  try{const r=await decWith(ENC,$("dpw").value);store=JSON.parse(r.text);ckey=r.key;csalt=r.salt;LOCKED=false;ENC=null;norm();persist();snapNow();$("dec").classList.add("hidden");$("dpw").value="";$("derr").textContent="";boot()}
+  catch(e){$("derr").textContent="Hibás jelszó."}
+};
+$("dpw").onkeydown=e=>{if(e.key==="Enter")$("dgo").onclick()};
+
+/* Riport */
+function dl(text,type,name){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
+function rptRows(){
+  const v=$("rper").value,t=todayS();let a=firstDay(),b=t;
+  if(v==="m0")a=monthStart();else if(v==="m1"){b=addD(monthStart(),-1);a=b.slice(0,8)+"01"}else if(v==="d90")a=addD(t,-89);
+  if(a<firstDay())a=firstDay();
+  const R=[];for(let d=a;d<=b;d=addD(d,1))R.push({d,e:data.days[d]||{}});
+  return R;
+}
+const rptDet=e=>e.items&&e.items.length?e.items.map(i=>fl(i.q)+"× "+i.n).join(", "):(e.what?e.what+(e.qty?" ("+fl(e.qty)+" "+(e.unit||"")+")":""):"");
+$("rCsv").onclick=()=>{
+  const c=C(),q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+  const H=["Dátum","Állapot","Tétel","Költség (Ft)","Ok","Késztetés","Hangulat","Napszak","Hely","Társaság","Joker","Reflexió","Megjegyzés"];
+  const L=[H.map(q).join(";")].concat(rptRows().map(({d,e})=>[d,e.s?(e.s==="i"?W.yes(c):W.no(c)):"nincs adat",rptDet(e),e.cost||"",e.why||"",typeof e.crave==="number"?e.crave:"",typeof e.mood==="number"?e.mood:"",e.tp||"",e.pl||"",e.co||"",e.joker?"igen":"",e.refl||"",e.note||""].map(q).join(";")));
+  dl("\ufeff"+L.join("\r\n"),"text/csv;charset=utf-8","nodrink-riport-"+todayS()+".csv");toast("CSV letöltve");
+};
+$("rPdf").onclick=()=>{
+  const c=C(),R=rptRows();let dd=0,sp=0;R.forEach(({e})=>{if(e.s==="i"){dd++;sp+=e.cost||0}});
+  const rows=R.map(({d,e})=>`<tr><td>${d}</td><td>${e.s?(e.s==="i"?esc(W.yes(c)):esc(W.no(c))):"–"}</td><td>${esc(rptDet(e))}</td><td>${e.cost?ft(e.cost):""}</td><td>${esc(e.why||"")}</td></tr>`).join("");
+  const html=`<html><head><meta charset="utf-8"><title>NoDrink riport</title><style>body{font:12px Georgia,serif;margin:20px;color:#111}h1{font-size:20px;margin:0 0 4px}table{border-collapse:collapse;width:100%;margin-top:12px}td,th{border:1px solid #bbb;padding:4px 6px;text-align:left}th{background:#eee}</style></head><body><h1>NoDrink riport – ${esc(c.label)}</h1><p>Időszak: ${R.length?R[0].d+" – "+R[R.length-1].d:"–"} · Napok: ${R.length} · Amikor volt: ${dd} · Amikor nem volt: ${R.length-dd} · Költés: ${ft(sp)} · Széria: ${streak()} nap</p><table><tr><th>Dátum</th><th>Állapot</th><th>Tétel</th><th>Költség</th><th>Ok</th></tr>${rows}</table></body></html>`;
+  const f=document.createElement("iframe");f.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0";document.body.appendChild(f);
+  const w=f.contentWindow;w.document.open();w.document.write(html);w.document.close();
+  setTimeout(()=>{w.focus();w.print();setTimeout(()=>f.remove(),3000)},300);
+};
+
+/* Átvitel kóddal */
+const bufB64=u=>{let b="";u.forEach(x=>b+=String.fromCharCode(x));return btoa(b)};
+const b64Buf=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+const enc8=x=>new TextEncoder().encode(x),dec8=b=>new TextDecoder().decode(b);
+async function deriveKey(pw,salt){const km=await crypto.subtle.importKey("raw",enc8(pw),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:200000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+async function encWith(str,key,salt){const iv=crypto.getRandomValues(new Uint8Array(12)),ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,enc8(str)));return{enc:1,s:bufB64(salt),i:bufB64(iv),c:bufB64(ct)}}
+const encStr=str=>encWith(str,ckey,csalt);
+async function decWith(o,pw){const salt=b64Buf(o.s),key=await deriveKey(pw,salt),pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64Buf(o.i)},key,b64Buf(o.c));return{text:dec8(pt),key,salt}}
+$("xMk").onclick=async()=>{
+  const j=JSON.stringify(store);let code=null;
+  if(ckey)code="NDE1:"+bufB64(enc8(JSON.stringify(await encStr(j))));
+  try{if(!code&&typeof CompressionStream!=="undefined"){const r=new Response(new Blob([j]).stream().pipeThrough(new CompressionStream("gzip")));code="NDZ1:"+bufB64(new Uint8Array(await r.arrayBuffer()))}}catch(e){}
+  if(!code)code="NDP1:"+bufB64(new TextEncoder().encode(j));
+  $("xfer").value=code;toast("Kód elkészült");
+};
+$("xCopy").onclick=async()=>{const v=$("xfer").value;if(!v){alert("Előbb készíts kódot.");return}try{await navigator.clipboard.writeText(v);toast("Kód a vágólapon")}catch(e){$("xfer").select();alert("Másold ki a kódot kézzel.")}};
+$("xIn").onclick=async()=>{
+  const v=($("xfer").value||"").trim();if(!v){alert("Illeszd be a kódot.");return}
+  try{
+    let j;
+    if(v.startsWith("NDZ1:")){const r=new Response(new Blob([b64Buf(v.slice(5))]).stream().pipeThrough(new DecompressionStream("gzip")));j=await r.text()}
+    else if(v.startsWith("NDE1:")){const o=JSON.parse(dec8(b64Buf(v.slice(5))));const pw=prompt("Add meg a kód jelszavát:");if(!pw)return;j=(await decWith(o,pw)).text}
+    else if(v.startsWith("NDP1:"))j=new TextDecoder().decode(b64Buf(v.slice(5)));
+    else throw 0;
+    const o=JSON.parse(j);if(!o.t)throw 0;
+    if(!confirm("A kód adatai felülírják a jelenlegi adataidat. Folytatod?"))return;
+    store=o;norm();persist();setMode(store.mode,true);renderProf();toast("Adatok betöltve a kódból");
+  }catch(e){alert("A kód nem olvasható vagy sérült.")}
+};
+
+/* Első indítás */
+let onbS=0,onbV={};
+function onbShow(){onbS=0;onbV={kind:"alc",own:"",name:"",goal:0,cost:0};onbR();$("onb").classList.remove("hidden")}
+function onbR(){
+  const sk='<p style="margin:10px 0 0;text-align:center"><button class="mini" data-skip="1">Kihagyom</button></p>';
+  let h;
+  if(onbS===0)h=`<h2>Üdv a NoDrinkben!</h2><p class="mute">Mit szeretnél követni? Később bármikor adhatsz hozzá továbbiakat.</p><select id="ob1"><option value="alc">Alkohol</option><option value="ene">Energiaital</option>${Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${k==="own"?"Saját név…":esc(v.name)}</option>`).join("")}</select><input id="ob1n" class="hidden" placeholder="A követés neve" style="margin-top:8px" autocomplete="off"><div class="row"><button class="main" data-n="1" style="flex:1">Tovább</button></div>`;
+  else if(onbS===1)h=`<h2>Mi legyen a célod?</h2><label for="ob2n">Hogy szólítsunk? (nem kötelező)</label><input id="ob2n" autocomplete="off"><label for="ob2g">Cél (egymás utáni napok)</label><select id="ob2g"><option value="0">Még nincs cél</option><option value="7">7 nap</option><option value="14">14 nap</option><option value="30">30 nap</option><option value="90">90 nap</option></select><div class="row"><button class="main" data-n="1" style="flex:1">Tovább</button></div>`;
+  else h=`<h2>Átlagos napi költés</h2><p class="mute">Mennyibe kerül egy napnyi, amikor fogyasztasz? Ebből számolja az app a megspórolt pénzt. Üresen hagyhatod.</p><input id="ob3" inputmode="numeric" placeholder="pl. 2500 Ft" autocomplete="off"><div class="row"><button class="main" data-n="1" style="flex:1">Kész</button></div>`;
+  $("onbc").innerHTML=h+sk;
+}
+$("onbc").onchange=e=>{if(e.target.id==="ob1")$("ob1n").classList.toggle("hidden",e.target.value!=="own")};
+$("onbc").onclick=e=>{
+  const d=e.target.dataset||{};
+  if(d.skip){store.onb=true;persist();$("onb").classList.add("hidden");return}
+  if(!d.n)return;
+  if(onbS===0){onbV.kind=$("ob1").value;onbV.own=$("ob1n").value.trim();if(onbV.kind==="own"&&!onbV.own){alert("Add meg a követés nevét.");return}}
+  if(onbS===1){onbV.name=$("ob2n").value.trim();onbV.goal=parseInt($("ob2g").value,10)||0}
+  if(onbS===2){onbV.cost=parseInt(($("ob3").value||"").replace(/\D/g,""),10)||0;onbDone();return}
+  onbS++;onbR();
+};
+function onbDone(){
+  store.onb=true;if(onbV.name)store.name=onbV.name;
+  let key=onbV.kind;
+  if(!CFG[key]){key="x"+(++store.xn);const T=mkT();T.kind=onbV.kind;if(onbV.kind==="own")T.name=onbV.own||"Saját";store.t[key]=T}
+  norm();store.t[key].profile.goal=onbV.goal;store.t[key].profile.cost=onbV.cost;persist();
+  $("onb").classList.add("hidden");setMode(key);showTab("home");toast("Kész, jó használatot!");
+}
+
 /* Társ-váltó */
+const palOf=m=>{const c=store.t[m]&&store.t[m].color;if(c)return c;return m==="alc"||m==="ene"?m:"p"+(1+(parseInt(m.slice(1),10)||1)%4)};
+const trkLabel=k=>{const n=E()&&kenOf(k);return n?n[0]:(CFG[k]?CFG[k].label:xCfg(store.t[k]).label)};
+function renderMsw(){
+  $("msw").innerHTML=Object.keys(store.t).map(k=>`<button data-m="${k}" class="${k===store.mode?"on":""}">${esc(trkLabel(k))}</button>`).join("")+(Object.keys(store.t).length<12?'<button data-m="+" aria-label="Új követés">＋</button>':"");
+}
+$("msw").onclick=e=>{const m=e.target.dataset&&e.target.dataset.m;if(!m)return;if(m==="+"){showTab("prof");$("trkc").open=true;$("trkc").scrollIntoView({behavior:"smooth"});return}if(m!==store.mode)setMode(m)};
+function applyWording(){
+  const c=C();
+  $("bn").textContent=W.no(c);$("bi").textContent=W.yes(c);$("askNo").textContent=W.no(c);$("askYes").textContent=W.yes(c);$("askq").textContent=c.q;
+  $("ep").innerHTML=`<option value="0">${W.pr(c)}</option><option value="max">Legfeljebb…</option>`;
+}
+function tx(h){
+  if(store.mode==="alc"||E())return h;
+  const c=C(),a=c.act,u=c.useN;
+  return h.replace(/Ivásmentes/g,cap(a)+" nélküli").replace(/ivásmentes/g,a+" nélküli").replace(/Ivós/g,cap(u)).replace(/ivós/g,u).replace(/nem iszom/g,W.pr(c).toLowerCase());
+}
 function setMode(m,silent){
-  store.mode=m;data=store.t[m];document.body.dataset.m=m;persist();
-  document.querySelectorAll(".mswitch button").forEach(b=>b.classList.toggle("on",b.dataset.m===m));
-  $("mi").style.transform="translateX("+MODES.indexOf(m)*100+"%)";updCus();
-  $("askq").textContent=C().q;$("ask").classList.add("hidden");
+  if(!store.t[m])m="alc";
+  store.mode=m;data=store.t[m];document.body.dataset.m=palOf(m);persist();
+  renderMsw();applyWording();
+  $("ask").classList.add("hidden");
   fillForm();fillLib();sel=null;selDays=[];$("panel").classList.add("hidden");
-  view={y:new Date().getFullYear(),m:new Date().getMonth()};
+  const n=new Date();view={y:n.getFullYear(),m:n.getMonth()};
   celebrate(true);renderAll();
   const pg=$("p-home");pg.classList.remove("enter");void pg.offsetWidth;pg.classList.add("enter");
   if(curT==="add")askToday();
 }
-document.querySelectorAll(".mswitch button").forEach(b=>b.onclick=()=>{if(store.mode!==b.dataset.m)setMode(b.dataset.m)});
+
 
 /* Mérföldkövek + konfetti */
 function celebrate(silent){
@@ -1117,15 +1568,53 @@ function askToday(){
   $("askd").textContent=t+" ("+WDL[new Date().getDay()]+")";
   $("ask").classList.remove("hidden");
 }
-$("askNo").onclick=()=>{data.days[todayS()]={s:"n"};persist();$("ask").classList.add("hidden");flashDate=todayS();renderAll();toast("Rögzítve: ma nem ittál")};
+$("askNo").onclick=()=>{uT=0;pushUndo();data.days[todayS()]={s:"n"};persist();showUndo();$("ask").classList.add("hidden");flashDate=todayS();renderAll();toast("Rögzítve: "+W.no(C()).toLowerCase())};
 $("askYes").onclick=()=>{$("ask").classList.add("hidden");const n=new Date();view={y:n.getFullYear(),m:n.getMonth()};selDays=[todayS()];openPanel(todayS());mode="i";syncSeg();autoSave(true);$("panel").scrollIntoView({behavior:"smooth"})};
 $("askX").onclick=()=>$("ask").classList.add("hidden");
 
-function renderAll(){renderTop();renderCal();if(curT==="home")renderHome();if(curT==="stats")renderStats();if(curT==="prof"){renderProf();renderLib()}}
-applyTheme();applyLite();
+function renderAll(){renderTop();renderCal();if(curT==="home")renderHome();if(curT==="add"){renderYear();renderLog()}if(curT==="stats")renderStats();if(curT==="prof"){renderProf();renderLib()}}
+const EN={"Főoldal": "Home", "Felvitel": "Log", "Profil": "Profile", "Fő navigáció": "Main navigation", "Statisztika": "Statistics", "Italok": "Drinks", "Testreszabás": "Customize", "Kész": "Done", "Főoldal testreszabása": "Customize home", "Sablonok": "Templates", "Elemek": "Items", "Hozzáadható": "Available", "+ Hozzáad": "+ Add", "+ Jelenlegi mentése": "+ Save current", "Húzd a ≡ jelet, vagy használd a nyilakat.": "Drag the ≡ handle, or use the arrows.", "Nincs elem.": "No items.", "Kicsi": "Small", "Nagy": "Large", "Minimál": "Minimal", "Kiegyensúlyozott": "Balanced", "Részletes": "Detailed", "Ivásmentes napok (széria)": "Sober days (streak)", "Utolsó 7 nap": "Last 7 days", "Legjobb széria": "Best streak", "Ivásmentes napok e hónapban": "Sober days this month", "Ivós napok e hónapban": "Drinking days this month", "Ivásmentes arány (30 nap)": "Sober rate (30 days)", "Költés e hónapban": "Spending this month", "Megspórolt pénz": "Money saved", "Gyorsmutatók": "Quick stats", "Heti grafikon": "Weekly chart", "Heti összefoglaló": "Weekly summary", "Jelvények": "Badges", "Heti keret": "Weekly limit", "Kiváltó helyzetek": "Triggers", "Közelgő alkalmak": "Upcoming events", "Közelgő alkalom": "Upcoming event", "Megtakarítási cél": "Savings goal", "Késztetés átlag": "Average craving", "Mi történhet a testeddel?": "What may happen in your body?", "Mai nap (gyors rögzítés)": "Today (quick log)", "Mai nap": "Today", "SOS gomb": "SOS button", "Minden követés (szériák)": "All trackers (streaks)", "Minden követés": "All trackers", "Követések összevetése": "Tracker comparison", "Helyzet-elemzés": "Situation analysis", "Kihívás": "Challenge", "Napi check-in": "Daily check-in", "Havi hőtérkép": "Monthly heat map", "Saját számlálók": "Custom counters", "Heti ivásmentes napok": "Sober days per week", "Ivós napok a hét napjain": "Drinking days by weekday", "Leggyakoribb italok": "Most common drinks", "Leggyakoribb okok": "Most common reasons", "Hónapok": "Months", "Hónap": "Month", "Arány": "Rate", "Mennyiség": "Quantity", "Késztetés (0–10)": "Craving (0–10)", "Egyéb": "Other", "Italok szerint": "By drink", "Típusok szerint": "By type", "Egészség (becslés)": "Health (estimate)", "Egy évre vetítve": "Projected for a year", "Költés-összehasonlítás": "Spending comparison", "Check-in összefüggések": "Check-in correlations", "Esti reflexiók": "Evening reflections", "Részletes statisztika": "Detailed statistics", "‹ Vissza a Profilhoz": "‹ Back to Profile", "jelenlegi széria": "current streak", "leghosszabb széria": "longest streak", "átlagos széria": "average streak", "legjobb széria": "best streak", "ivásmentes nap": "sober days", "ivós nap": "drinking days", "ivásmentes arány": "sober rate", "ivásmentes nap e hónapban": "sober days this month", "ivós nap e hónapban": "drinking days this month", "ivásmentes e hónapban": "sober this month", "költés e hónapban": "spending this month", "ivásmentes arány az elmúlt 30 napban": "sober rate in the last 30 days", "nap – legjobb széria": "days – best streak", "nap egymás után": "days in a row", "nap": "days", "összes ital": "total drinks", "átlag ivós napon": "average on a drinking day", "legtöbb egy napon": "most in one day", "megspórolt": "saved", "megspórolt (becslés)": "saved (estimate)", "átlag": "average", "ivós napokon": "on drinking days", "ivásmentes napokon": "on sober days", "elkerült kcal": "avoided kcal", "többletköltés": "extra spending", "átlagos késztetés (0–10)": "average craving (0–10)", "rögzített nap": "days logged", "követés": "trackers", "adag a régi szokással": "servings, old habit", "adag a mostani ütemben": "servings, current pace", "költés a régi szokással": "spending, old habit", "költés a mostani ütemben": "spending, current pace", "különbség (adag)": "difference (servings)", "különbség (Ft / év)": "difference (Ft / year)", "alvás (óra): ivós napokon": "sleep (hours): drinking days", "alvás (óra): ivásmentes napokon": "sleep (hours): sober days", "a „nem” terv betartása": "keeping the “no” plan", "Ivásmentes napok:": "Sober days:", "Költés:": "Spending:", "Ivásmentes": "Sober", "Ivós": "Drinking", "Ivós napok": "Drinking days", "ivós": "drinking", "ivásmentes": "sober", "ivás": "drinking", "ingyen (meghívtak)": "free (someone else paid)", "Állapot": "Status", "Tétel": "Item", "Költség": "Cost", "Reflexió": "Reflection", "Átlagos napi költés": "Average daily cost", "Ugye nem ittál ma?": "You didn't drink today, right?", "Ugye nem ittál ma energiaitalt?": "You didn't drink an energy drink today, right?", "Nem ittam": "I didn't drink", "Ittam": "I drank", "Nem iszom": "I won't drink", "Legfeljebb…": "At most…", "Több nap kijelölése": "Select multiple days", "Több nap: BE": "Multiple days: ON", "Kijelölés törlése": "Clear selection", "Elmúlt 3 nap": "Last 3 days", "Ez a hét": "This week", "Hétvégék": "Weekends", "Egész hónap": "Whole month", "Előző hónap": "Previous month", "Következő hónap": "Next month", "Előző év": "Previous year", "Következő év": "Next year", "Nap(ok) törlése": "Delete day(s)", "Automatikus mentés: minden változtatás azonnal mentődik.": "Autosave: every change is saved instantly.", "Visszavonás": "Undo", "Mentve": "Saved", "Ital a tárból": "Drink from library", "Válassz italt…": "Choose a drink…", "Hozzáad": "Add", "Én fizetem": "I'm paying", "Meghívtak (ingyen)": "Someone else paid (free)", "Ki fizette": "Who paid", "Vagy add meg kézzel:": "Or enter manually:", "Mit ittál?": "What did you drink?", "Mértékegység": "Unit", "Válassz…": "Choose…", "Shot (4 cl)": "Shot (4 cl)", "Pohár (500 ml)": "Glass (500 ml)", "Kis doboz (250 ml)": "Small can (250 ml)", "Nagy doboz (500 ml)": "Large can (500 ml)", "Mennyi? (darab)": "How many?", "Napszak": "Time of day", "Hely": "Place", "Társaság": "Company", "Reggel": "Morning", "Délután": "Afternoon", "Este": "Evening", "Éjszaka": "Night", "Otthon": "Home", "Munkahely": "Work", "Bár / étterem": "Bar / restaurant", "Barátoknál": "At friends'", "Utazás": "Travel", "Egyedül": "Alone", "Párral": "With partner", "Barátokkal": "With friends", "Családdal": "With family", "Kollégákkal": "With colleagues", "Joker nap (havonta egyszer): a széria nem nullázódik": "Joker day (once a month): your streak won't reset", "Mennyibe került? (Ft)": "How much did it cost? (Ft)", "Miért?": "Why?", "Válassz okot…": "Choose a reason…", "Egyéb – saját beírása": "Other – type your own", "Saját ok beírása": "Type your reason", "Hangulat ma": "Mood today", "Nincs megadva": "Not set", "1 – nagyon rossz": "1 – very bad", "2 – rossz": "2 – bad", "3 – közepes": "3 – okay", "4 – jó": "4 – good", "5 – nagyon jó": "5 – very good", "Esti reflexió (egy mondat)": "Evening reflection (one sentence)", "Mi ment jól ma, és mi volt nehéz?": "What went well today, and what was hard?", "Késztetés ma (0 = semmi, 10 = nagyon erős)": "Craving today (0 = none, 10 = very strong)", "Megjegyzés": "Note", "Stressz": "Stress", "Társaság / buli": "Company / party", "Unalom": "Boredom", "Ünneplés": "Celebration", "Magány": "Loneliness", "Rossz kedv": "Low mood", "Fáradtság": "Fatigue", "Munka utáni lazítás": "Relaxing after work", "Veszekedés / konfliktus": "Argument / conflict", "Szokás": "Habit", "Zöld: nem ittál · Piros: ittál · Szaggatott: még nincs kitöltve. Szerkeszteni az aktuális hónap első napjától lehet.": "Green: didn't drink · Red: drank · Dashed: not filled in yet. You can edit from the first day of the current month.", "Év áttekintése": "Year overview", "Zöld: nem volt · Piros: volt · Szürke: nincs adat. Koppints egy napra.": "Green: no · Red: yes · Grey: no data. Tap a day.", "Napló keresése": "Search log", "Keresés (tétel, ok, megjegyzés…)": "Search (item, reason, note…)", "Minden nap": "All days", "Csak amikor volt": "Only when it happened", "Csak amikor nem volt": "Only when it didn't", "Nincs találat.": "No results.", "Alkalmak (előre tervezés)": "Events (plan ahead)", "Dátum": "Date", "Esemény neve": "Event name", "Tervem": "My plan", "Max. adag": "Max servings", "Alkalom mentése": "Save event", "Vidd fel a közelgő eseményeket (buli, esküvő), és add meg a tervedet. Az esemény előtt emlékeztet, utána kiértékeli.": "Add upcoming events (party, wedding) and your plan. The app reminds you beforehand and evaluates afterwards.", "Hány órát aludtál?": "How many hours did you sleep?", "Hangulat reggel": "Mood this morning", "Hangulat este": "Mood this evening", "Mai terv": "Today's plan", "Betartottad a tervet?": "Did you keep your plan?", "Mi ment jól ma?": "What went well today?", "Igen": "Yes", "Részben": "Partly", "Nem": "No", "Még nem tudom": "Not sure yet", "Legfeljebb pár adag": "A few servings at most", "SOS – kívánásom van": "SOS – I have a craving", "Kívánás-SOS": "Craving SOS", "Belégzés": "Breathe in", "Tartsd bent": "Hold", "Kilégzés": "Breathe out", "A késztetés hullámszerű, általában 10–20 perc alatt elmúlik. Lélegezz, és várj.": "Cravings come in waves and usually pass in 10–20 minutes. Breathe and wait.", "Ehelyett:": "Instead:", "Átvészeltem": "I got through it", "Bezárás": "Close", "Kihívás elindult": "Challenge started", "Kihívás teljesítve!": "Challenge completed!", "Megcsináltam": "I did it", "Kész ✓": "Done ✓", "Megszakítom": "Quit", "Megszakítod a kihívást?": "Quit the challenge?", "Válassz egy kihívást: minden napra kapsz egy apró feladatot.": "Pick a challenge: you get a small task every day.", "Mai feladat:": "Today's task:", "7 nap": "7 days", "30 nap": "30 days", "100 nap": "100 days", "Check-in mentve": "Check-in saved", "Ma még nincs check-in. Töltsd ki a Felvitel oldalon.": "No check-in today. Fill it in on the Log page.", "A check-in kitöltése után itt jelennek meg az összefüggések.": "Correlations appear here after you fill in check-ins.", "Ma még nincs kitöltve": "Not filled in yet today", "Mai tipp": "Tip", "Törölve": "Deleted", "Visszavonva": "Undone", "Ez a nap már nem szerkeszthető": "This day can no longer be edited", "Nincs ilyen nap": "No such day", "Joker napot havonta csak egyszer, egy napra lehet használni": "A joker day can only be used once a month, for a single day", "Fiók és megjelenés": "Account and appearance", "Nyelv / Language": "Language", "Betűméret": "Font size", "Normál": "Normal", "Nagyobb": "Larger", "Legnagyobb": "Largest", "Nagy kontraszt": "High contrast", "Kevesebb animáció": "Fewer animations", "Adatok titkosítása (jelszó)": "Encrypt data (password)", "Új jelszó (min. 6 karakter)": "New password (min. 6 characters)", "Bekapcsolás": "Turn on", "Titkosítás kikapcsolása": "Turn off encryption", "A titkosítás be van kapcsolva.": "Encryption is on.", "A titkosítás ki van kapcsolva.": "Encryption is off.", "Elfelejtett jelszóval az adatok nem állíthatók vissza, ezért készíts fájlmentést is.": "If you forget the password the data cannot be recovered, so also make a file backup.", "Téma": "Theme", "Automatikus": "Automatic", "Világos": "Light", "Sötét": "Dark", "PIN-kód (4 számjegy)": "PIN code (4 digits)", "Törlés": "Delete", "Napi emlékeztető időpontja": "Daily reminder time", "Letöltés (.ics)": "Download (.ics)", "A letöltött fájlt a telefonod naptára megnyitja, és napi ismétlődő értesítést állít be.": "Your phone's calendar opens the downloaded file and sets a repeating daily notification.", "A PIN csak a képernyőt zárja le ebben a böngészőben, az adatokat nem titkosítja.": "The PIN only locks the screen in this browser; it does not encrypt the data.", "Egyszerű nézet": "Simple view", "Teljes nézet": "Full view", "Neved": "Your name", "Opcionális": "Optional", "Követések": "Trackers", "Az Alkohol és az Energiaital alap követés. Legfeljebb 10 továbbit adhatsz hozzá.": "Alcohol and Energy drinks are the base trackers. You can add up to 10 more.", "Új követés": "New tracker", "Hozzáadás": "Add", "alap követés": "base tracker", "saját követés": "custom tracker", "Átnevez": "Rename", "Saját név megadása…": "Enter a custom name…", "A követés neve": "Tracker name", "Cél": "Goal", "Célom (ivásmentes napok egymás után)": "My goal (sober days in a row)", "Nincs cél": "No goal", "Átlagos napi költésem, amikor ittam (Ft)": "My average daily spending when I drank (Ft)", "Heti keret: legfeljebb ennyi ivós nap": "Weekly limit: max drinking days", "Heti keret: legfeljebb ennyi adag": "Weekly limit: max servings", "Nincs keret": "No limit", "Mit csinálsz ivás helyett? (soronként egy)": "What do you do instead of drinking? (one per line)", "Megtakarítási cél neve": "Savings goal name", "Megtakarítási cél összege (Ft)": "Savings goal amount (Ft)", "Régi szokásom: adag hetente": "My old habit: servings per week", "Régi szokásom: költés hetente (Ft)": "My old habit: spending per week (Ft)", "Ha–akkor tervek (soronként egy, pl. „Ha stresszes vagyok, akkor sétálok”)": "If–then plans (one per line, e.g. “If I'm stressed, I'll go for a walk”)", "Szín": "Color", "Zöld": "Green", "Kék": "Blue", "Lila": "Purple", "Borostyán": "Amber", "Zöldeskék": "Teal", "Rózsaszín": "Pink", "Saját számláló (pl. „Új munka kezdete”)": "Custom counter (e.g. “Started new job”)", "Felirat": "Label", "Számláló hozzáadása": "Add counter", "Név": "Name", "Típus": "Type", "Mennyiség (ml)": "Amount (ml)", "Ár (Ft)": "Price (Ft)", "Alkoholtartalom (%)": "Alcohol content (%)", "Koffein (mg / adag)": "Caffeine (mg / serving)", "Egyéb érték (nem kötelező)": "Other value (optional)", "Az italaid": "Your drinks", "Még nincs ital felvéve.": "No drinks added yet.", "Szerk.": "Edit", "Mégse": "Cancel", "Mentés": "Save", "Ital elmentve": "Drink saved", "Ital törölve": "Drink deleted", "Vidd fel az italaidat egyszer, a napi rögzítésnél pedig csak kiválasztod őket. Ezekből készül a részletes statisztika.": "Add your drinks once, then just pick them when logging a day. The detailed statistics are built from them.", "Saját mértékegységek": "Custom units", "pl. „Korsó” 500 ml. A felvitelnél megjelenik a mértékegységek között.": "e.g. “Pint” 500 ml. It appears among the units when logging.", "Név (pl. Korsó)": "Name (e.g. Pint)", "Biztonsági mentések": "Backups", "Az app naponta egyszer automatikusan másolatot készít az adataidról a böngészőben (az utolsó 7-et tartja meg). Ez nem helyettesíti a fájlba mentést.": "The app makes a copy of your data in the browser once a day (keeps the last 7). This does not replace a file backup.", "Visszaállítás": "Restore", "Még nincs másolat.": "No copies yet.", "Adatok és átvitel": "Data and transfer", "Minden adat csak ebben a böngészőben tárolódik, nincs felhős mentés. Ments rendszeresen fájlba, hogy át tudd vinni másik eszközre.": "All data is stored only in this browser; there is no cloud backup. Save to a file regularly so you can move it to another device.", "Mentés fájlba": "Save to file", "Betöltés fájlból": "Load from file", "Ennek a követésnek a törlése": "Delete this tracker's data", "Riport": "Report", "Ez a hónap": "This month", "Utolsó 90 nap": "Last 90 days", "Teljes időszak": "All time", "Riport (PDF)": "Report (PDF)", "Riport (CSV)": "Report (CSV)", "A PDF-et a megnyíló nyomtatási ablakból mentheted („Mentés PDF-ként” vagy megosztás).": "Save the PDF from the print dialog that opens (“Save as PDF” or share).", "Átvitel másik telefonra": "Transfer to another phone", "Az adatok mérete miatt QR-kód helyett szöveges kódot használ az app: elküldheted üzenetben, és a másik telefonon beillesztheted.": "Because of the data size the app uses a text code instead of a QR code: send it in a message and paste it on the other phone.", "Itt jelenik meg a kód / ide illeszd be a kódot": "The code appears here / paste a code here", "Kód készítése": "Create code", "Másolás": "Copy", "Betöltés": "Load", "CSV letöltve": "CSV downloaded", "Kód elkészült": "Code created", "Kód a vágólapon": "Code copied", "Adatok betöltve": "Data loaded", "Adatok betöltve a kódból": "Data loaded from code", "Fájl elmentve": "File saved", "Felirat és dátum": "Label and date", "Szín elmentve": "Color saved", "Téma elmentve": "Theme saved", "Név elmentve": "Name saved", "Cél elmentve": "Goal saved", "Költség elmentve": "Cost saved", "Keret elmentve": "Limit saved", "Lista elmentve": "List saved", "Tervek elmentve": "Plans saved", "Elmentve": "Saved", "Titkosítás bekapcsolva": "Encryption turned on", "Titkosítás kikapcsolva": "Encryption turned off", "Követés hozzáadva": "Tracker added", "Követés törölve": "Tracker deleted", "Számláló hozzáadva": "Counter added", "Mértékegység hozzáadva": "Unit added", "Alkalom elmentve": "Event saved", "Minden adat törölve": "All data deleted", "Sablon alkalmazva": "Template applied", "Sablon elmentve": "Template saved", "Kész, jó használatot!": "All set, enjoy!", "Üdv a NoDrinkben!": "Welcome to NoDrink!", "Üdv!": "Hello!", "Mit szeretnél követni? Később bármikor adhatsz hozzá továbbiakat.": "What would you like to track? You can add more later.", "Tovább": "Next", "Kihagyom": "Skip", "Mi legyen a célod?": "What is your goal?", "Hogy szólítsunk? (nem kötelező)": "What should we call you? (optional)", "Cél (egymás utáni napok)": "Goal (days in a row)", "Még nincs cél": "No goal yet", "Feloldás": "Unlock", "Jelszó": "Password", "Add meg a jelszót az adatok feloldásához": "Enter your password to unlock your data", "Add meg a PIN-kódot": "Enter your PIN", "Hibás jelszó.": "Wrong password.", "Hibás fájl.": "Invalid file.", "Hibás fájl vagy jelszó.": "Invalid file or wrong password.", "A kód nem olvasható vagy sérült.": "The code is unreadable or damaged.", "A másolat nem olvasható.": "The copy is unreadable.", "A jelszó legalább 6 karakter legyen.": "The password must be at least 6 characters.", "A PIN pontosan 4 számjegy legyen.": "The PIN must be exactly 4 digits.", "Ez a böngésző nem támogatja a titkosítást.": "This browser does not support encryption.", "Bekapcsolod a titkosítást? Elfelejtett jelszóval az adatok nem állíthatók vissza.": "Turn on encryption? If you forget the password the data cannot be recovered.", "Kikapcsolod a titkosítást? Az adatok újra titkosítatlanul tárolódnak.": "Turn off encryption? Data will be stored unencrypted again.", "Add meg a fájl jelszavát:": "Enter the file password:", "Add meg a kód jelszavát:": "Enter the code password:", "A kód adatai felülírják a jelenlegi adataidat. Folytatod?": "The code's data will overwrite your current data. Continue?", "Előbb készíts kódot.": "Create a code first.", "Másold ki a kódot kézzel.": "Copy the code manually.", "Biztosan törlöd az összes adatot?": "Are you sure you want to delete all data?", "Ez nem vonható vissza. Törlöd?": "This cannot be undone. Delete?", "Törlöd a PIN-kódot?": "Delete the PIN?", "Törlöd az alkalmat?": "Delete the event?", "Törlöd ezt az italt a tárból? A korábbi bejegyzések megmaradnak.": "Delete this drink from the library? Earlier entries are kept.", "Törlöd ezt a követést és minden adatát? Előtte érdemes fájlba menteni.": "Delete this tracker and all its data? Consider saving to a file first.", "Törlöd a mértékegységet? A régi bejegyzések mennyisége megmarad, de a literszám nem számolódik.": "Delete the unit? Old entries keep their amounts, but liters won't be counted.", "Add meg a darabszámot.": "Enter the quantity.", "Add meg a dátumot és az esemény nevét.": "Enter the date and the event name.", "Add meg a feliratot és a dátumot.": "Enter the label and the date.", "Add meg a követés nevét.": "Enter the tracker name.", "Add meg a maximális adagot.": "Enter the maximum servings.", "Add meg a nevet és a mennyiséget (ml).": "Enter the name and the amount (ml).", "Add meg a nevet és az ml értéket.": "Enter the name and the ml value.", "Válassz egy követést a listából.": "Choose a tracker from the list.", "Legfeljebb 10 további követés vehető fel.": "You can add up to 10 more trackers.", "Válassz italt a tárból. Újat az Italok fülön tudsz felvenni.": "Choose a drink from the library. You can add new ones in the Profile.", "Nincs megjelenített elem. A Testreszabás gombbal adhatsz hozzá statisztikákat.": "Nothing to show. Use Customize to add statistics.", "Állíts be célt a Profilban.": "Set a goal in the Profile.", "Állíts be keretet a Profilban.": "Set a limit in the Profile.", "Adj meg számlálót a Profilban.": "Add a counter in the Profile.", "Adj meg ötleteket a Profilban.": "Add ideas in the Profile.", "Add meg az átlagos napi költést a Profilban.": "Enter your average daily spending in the Profile.", "Elérted a célt!": "You reached the goal!", "Következő jelvény": "Next badge", "Nincs mára vagy holnapra tervezett alkalom.": "No event planned for today or tomorrow.", "Néhány rögzített ivás után jelenik meg.": "Appears after a few logged drinks.", "Legalább 3 rögzített alkalom után jelenik meg.": "Appears after at least 3 logged occasions.", "Még nincs elég adat a többi követésből.": "Not enough data from the other trackers yet.", "Még nincs korábbi ivós hónap az összehasonlításhoz.": "No earlier drinking month to compare with yet.", "Előző hónaphoz képest": "Compared to previous month", "Utolsó ivós hónaphoz képest": "Compared to last drinking month", "Általános tájékoztatás, nem orvosi tanács.": "General information, not medical advice.", "Az első nap után már bizonyítottad, hogy képes vagy rá.": "After the first day you've already proven you can do it.", "Egy hét: a szokás ereje gyengülni kezd.": "One week: the grip of the habit starts to weaken.", "Egy hónap: az új rutin kezd megszilárdulni.": "One month: the new routine starts to settle.", "Az alkohol kiürülőben van a szervezetedből, és sokaknál javul a hidratáltság.": "Alcohol is leaving your body, and for many people hydration improves.", "Sokaknál kezd javulni az alvás és a koncentráció.": "For many people sleep and concentration start to improve.", "Egy hét után sokan több energiát és jobb hangulatot tapasztalnak.": "After a week many people notice more energy and a better mood.", "Két hét: a bőr gyakran frissebb, a reggelek könnyebbek.": "Two weeks: skin often looks fresher and mornings are easier.", "Egy hónap: sokaknál javul a vérnyomás, az alvásminőség és a máj állapota.": "One month: for many people blood pressure, sleep quality and liver health improve.", "Három hónap: a hangulat és a koncentráció tartósabban javulhat.": "Three months: mood and concentration may improve more lastingly.", "Az elvonási tünetek (fejfájás, fáradtság) 1–2 napon belül jelentkezhetnek.": "Withdrawal symptoms (headache, fatigue) can appear within 1–2 days.", "A tünetek sokaknál néhány nap alatt enyhülnek, jellemzően 2–9 nap alatt múlnak.": "For many people symptoms ease within a few days, typically passing in 2–9 days.", "Az alvás és a nyugodtabb szívritmus sokaknál javul.": "Sleep and a calmer heart rhythm improve for many people.", "Egy hónap: stabilabb energiaszint, kevesebb cukorbevitel.": "One month: steadier energy levels and less sugar intake.", "Mérföldkő": "Milestone", "Átvészelted!": "You got through it!", "Rövid séta": "Short walk", "Pohár víz vagy tea": "Glass of water or tea", "Hívj fel valakit": "Call someone", "Zuhany": "Shower", "10 fekvőtámasz": "10 push-ups", "Pohár víz": "Glass of water", "10 perc séta": "10-minute walk", "Rövid szunyókálás": "Short nap", "Gyümölcs": "Fruit", "Tea kávé helyett": "Tea instead of coffee", "Mély lélegzés": "Deep breathing", "Igyál ma legalább 2 liter vizet": "Drink at least 2 liters of water today", "Sétálj 20 percet": "Walk for 20 minutes", "Írj le 3 dolgot, amiért hálás vagy": "Write down 3 things you're grateful for", "Aludj el éjfél előtt": "Go to sleep before midnight", "Főzz magadnak valami egészségeset": "Cook yourself something healthy", "Beszélgess valakivel 10 percet": "Talk with someone for 10 minutes", "Csinálj 10 perc nyújtást": "Stretch for 10 minutes", "Takaríts ki egy fiókot": "Tidy up one drawer", "Hallgass végig egy új zenét": "Listen to a new album", "Menj ki a friss levegőre 15 percre": "Get 15 minutes of fresh air", "Írj egy üzenetet egy barátodnak": "Message a friend", "Készíts tervet a holnapi napra": "Plan tomorrow", "Vegyél egy hosszú zuhanyt": "Take a long shower", "Olvass 15 percet": "Read for 15 minutes", "Csinálj 20 guggolást": "Do 20 squats", "Próbálj ki egy új teát": "Try a new tea", "Fényképezz le valami szépet": "Photograph something beautiful", "Szervezz egy programot a hétvégére": "Plan something for the weekend", "Légzőgyakorlat: 5 perc": "Breathing exercise: 5 minutes", "Mondj nemet valamire, ami nem tesz jót": "Say no to something that isn't good for you", "Hívj fel valakit, akire számíthatsz": "Call someone you can count on", "hétfő": "Monday", "kedd": "Tuesday", "szerda": "Wednesday", "csütörtök": "Thursday", "péntek": "Friday", "szombat": "Saturday", "vasárnap": "Sunday", "Alkohol": "Alcohol", "Energiaital": "Energy drinks", "Cigi": "Cigarettes", "Vape / e-cigi": "Vape", "Nasi / édesség": "Snacks / sweets", "Kávé": "Coffee", "Cukros üdítő": "Sugary drinks", "Gyorsétel": "Fast food", "Szerencsejáték": "Gambling", "Közösségi média": "Social media", "Videójáték": "Video games", "Impulzusvásárlás": "Impulse buying", "Saját": "Custom", "Sör": "Beer", "Bor": "Wine", "Pezsgő": "Sparkling wine", "Szeszes ital": "Spirits", "Koktél / likőr": "Cocktail / liqueur", "Klasszikus": "Classic", "Cukormentes": "Sugar-free", "Általános": "General", "Shot": "Shot", "Szál": "Stick", "Alkalom": "Occasion", "Adag": "Serving", "Csésze": "Cup", "Vásárlás": "Purchase", "Szeszes": "Spirits", "Pálinka": "Pálinka", "Fröccs": "Spritzer", "Rövidital / koktél": "Short drink / cocktail"};
+const ENR=[[/^(\d+) nap kijelölve$/,"$1 days selected"],[/^(\d+) nap adatainak törlése\?$/,"Delete data of $1 days?"],[/^Cél: (\d+) \\/ (\d+) nap$/,"Goal: $1 / $2 days"],[/^Következő jelvény: (\d+) \\/ (\d+) nap$/,"Next badge: $1 / $2 days"],[/^Utolsó .+: (\d{4}-\d\d-\d\d)$/,"Last time: $1"],[/^(\d+) nap$/,"$1 days"],[/^(\d+)\. nap \\/ (\d+)$/,"Day $1 / $2"],[/^nap – (.+)$/,"days – $1"],[/^Rögzítve: (.+)$/,"Saved: $1"],[/^Elmentve: (.+)$/,"Saved: $1"],[/^Visszaállítva: (.+)$/,"Restored: $1"],[/^Mérföldkő: (\d+) nap!$/,"Milestone: $1 days!"],[/^Átvészelted! Összesen: (\d+)$/,"You got through it! Total: $1"],[/^Heti összefoglaló – (.+)$/,"Weekly summary – $1"],[/^Beállítások – (.+)$/,"Settings – $1"],[/^Italok – (.+)$/,"Drinks – $1"],[/^Sablon alkalmazva: (.+)$/,"Template applied: $1"],[/^Ma rögzítetted: (.+)$/,"Logged today: $1"],[/^Ma: (.+) ✓$/,"Today: $1 ✓"],[/^(.+) másolatának visszaállítása\? A jelenlegi adatok felülíródnak\.$/,"Restore the copy from $1? Current data will be overwritten."],[/^(\d+) óra$/,"$1 hours"],[/^10\+ óra$/,"10+ hours"],[/^(\d+) nap – (.+)$/,"$1 days – $2"],[/^Cél \((.+)\)$/,"Goal ($1)"],[/^(.+) \(még (\d+)\)$/,"$1 (in $2 more)"],[/^(\d+) nap ✓$/,"$1 days ✓"],[/^Ma van a legkockázatosabb napod$/,"Today is your riskiest day"],[/^Ugye ma nem volt: (.+)\?$/,"You didn't do this today: $1, right?"],[/^Nem volt$/,"It didn't happen"],[/^Volt$/,"It happened"],[/^Ma volt\. Holnap új nap, új széria\.$/,"It happened today. Tomorrow is a new day."],[/^Ma még nincs kitöltve\.?\s*$/,"Not filled in yet today."],[/^A mai nap még nincs kitöltve\.\s*$/,"Today is not filled in yet."],[/^Követés kezdete: (\S+) · rögzített napok: (\d+)$/,"Tracking since: $1 · days logged: $2"],[/^(\d+) \\/ (\d+)$/,"$1 / $2"]];
+function trStr(t){
+  if(!E()||typeof t!=="string")return t;
+  const k=t.trim();if(!k)return t;
+  let o=EN[k];
+  if(o===undefined)for(const q of ENR){if(q[0].test(k)){o=k.replace(q[0],q[1]);break}}
+  if(o===undefined)return t;
+  if(store.mode!=="alc")o=o.replace(/Sober/g,"Clear").replace(/sober/g,"clear").replace(/Drinking/g,"Use").replace(/drinking/g,"use");
+  return t.replace(k,o);
+}
+const trOrig=new WeakMap();
+function trNode(n){
+  if(n.nodeType===3){const v=n.nodeValue,t=trStr(v);if(t!==v){trOrig.set(n,{o:v,t});n.nodeValue=t}}
+  else if(n.nodeType===1&&n.tagName!=="SCRIPT"&&n.tagName!=="STYLE"){
+    ["placeholder","aria-label","title"].forEach(a=>{const v=n.getAttribute(a);if(v){const t=trStr(v);if(t!==v){const m=trOrig.get(n)||{};m[a]={o:v,t};trOrig.set(n,m);n.setAttribute(a,t)}}});
+    n.childNodes.forEach(trNode);
+  }
+}
+function untrNode(n){
+  const m=trOrig.get(n);
+  if(n.nodeType===3){if(m&&n.nodeValue===m.t)n.nodeValue=m.o}
+  else if(n.nodeType===1){
+    if(m)for(const a in m)if(n.getAttribute(a)===m[a].t)n.setAttribute(a,m[a].o);
+    n.childNodes.forEach(untrNode);
+  }
+}
+function trAll(){if(E())trNode(document.body);else untrNode(document.body)}
+let trBusy=false;
+if(typeof MutationObserver!=="undefined")new MutationObserver(ms=>{
+  if(!E()||trBusy)return;trBusy=true;
+  try{ms.forEach(m=>{m.addedNodes.forEach(trNode);if(m.type==="characterData")trNode(m.target)})}finally{trBusy=false}
+}).observe(document.body,{childList:true,subtree:true,characterData:true});
+{const a0=window.alert.bind(window),c0=window.confirm.bind(window),p0=window.prompt.bind(window);window.alert=m=>a0(trStr(m));window.confirm=m=>c0(trStr(m));window.prompt=(m,d)=>p0(trStr(m),d)}
+function boot(){
+applyTheme();applyLite();applyA11y();applyLang();
 setMode(store.mode,true);
 showTab("home");
 lockUp();
+if(!store.onb){let any=false;for(const k in store.t)if(Object.keys(store.t[k].days).length)any=true;if(any){store.onb=true;persist()}else onbShow()}
+}
+if(LOCKED)$("dec").classList.remove("hidden");else boot();
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 let hid=0;document.addEventListener("visibilitychange",()=>{if(document.hidden)hid=Date.now();else{renderAll();if(store.pin&&Date.now()-hid>60000)lockUp()}});
 </script>
